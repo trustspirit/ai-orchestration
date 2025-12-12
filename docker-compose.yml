@@ -13,19 +13,13 @@ services:
       - /app/apps/backend/node_modules
       - /app/packages/shared/node_modules
       - /app/packages/ui/node_modules
+    env_file:
+      - path: .env
+        required: false
     environment:
       - NODE_ENV=development
       - PORT=6201
       - FRONTEND_URL=http://localhost:6200
-      # AI Provider API Keys (set these in .env file or pass via docker-compose)
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-5.1}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-sonnet-4-5}
-      - PERPLEXITY_API_KEY=${PERPLEXITY_API_KEY:-}
-      - PERPLEXITY_MODEL=${PERPLEXITY_MODEL:-sonar}
     command: pnpm --filter backend dev
     networks:
       - orchestration-network
@@ -42,6 +36,9 @@ services:
       - /app/apps/frontend/node_modules
       - /app/packages/shared/node_modules
       - /app/packages/ui/node_modules
+    env_file:
+      - path: .env
+        required: false
     environment:
       - NODE_ENV=development
       - PORT=6200
