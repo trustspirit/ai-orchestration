@@ -1,0 +1,29 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "NODE_ENV",
+    "NEXT_PUBLIC_API_URL",
+    "OPENAI_API_KEY",
+    "OPENAI_MODEL",
+    "GEMINI_API_KEY",
+    "GEMINI_MODEL",
+    "ANTHROPIC_API_KEY",
+    "CLAUDE_MODEL",
+    "PERPLEXITY_API_KEY",
+    "PERPLEXITY_MODEL",
+    "FRONTEND_URL",
+    "PORT"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}

@@ -1,0 +1,98 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+build
+.next
+out
+
+# Turbo
+.turbo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.local
+
+# IDE & Editor
+.idea
+.vscode
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# TypeScript
+*.tsbuildinfo
+
+# Next.js
+.next
+.vercel
+
+# NestJS
+# Already covered by dist
+
+# Debug
+.debug
+
+# Cache
+.cache
+.eslintcache
+.stylelintcache
+*.cache
+
+# Docker
+.docker
+
+# Temporary files
+tmp
+temp
+*.tmp
+*.temp
+
+# Package manager locks (keep pnpm-lock.yaml)
+package-lock.json
+yarn.lock
+
+# Optional: if you want to ignore compiled JS in packages
+# packages/*/dist
+
+# Storybook
+storybook-static
+
+# PWA
+**/public/sw.js
+**/public/workbox-*.js
+**/public/worker-*.js
+**/public/sw.js.map
+**/public/workbox-*.js.map
+**/public/worker-*.js.map

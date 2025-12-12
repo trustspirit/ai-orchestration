@@ -1,0 +1,24 @@
+{
+  "name": "ai-orchestration",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "docker:dev": "docker-compose up",
+    "docker:build": "docker-compose build",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "prettier": "^3.0.0"
+  },
+  "packageManager": "pnpm@9.14.4",
+  "engines": {
+    "node": ">=18"
+  }
+}
