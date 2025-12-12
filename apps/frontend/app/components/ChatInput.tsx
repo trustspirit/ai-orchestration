@@ -1,0 +1,80 @@
+'use client';
+
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import { Button, Spinner } from '@repo/ui';
+import { Strings } from '@repo/shared';
+
+interface ChatInputProps {
+  onSend: (message: string) => void;
+  isLoading: boolean;
+  disabled?: boolean;
+}
+
+export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
+  const [input, setInput] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const newHeight = Math.min(textareaRef.current.scrollHeight, 200);
+      textareaRef.current.style.height = `${newHeight}px`;
+    }
+  }, [input]);
+
+  const handleSend = () => {
+    if (input.trim() && !isLoading && !disabled) {
+      onSend(input.trim());
+      setInput('');
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  return (
+    <div className="relative">
+      <div className="flex gap-3 items-end p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+        <textarea
+          ref={textareaRef}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={Strings.chat.placeholder}
+          disabled={isLoading || disabled}
+          rows={1}
+          className="
+            flex-1 resize-none bg-transparent text-white placeholder-gray-500
+            focus:outline-none text-base leading-relaxed
+            min-h-[24px] max-h-[200px]
+          "
+        />
+        <div className="flex gap-2">
+          <Button
+            variant="primary"
+            onClick={handleSend}
+            disabled={!input.trim() || isLoading || disabled}
+            className="px-6"
+          >
+            {isLoading ? (
+              <Spinner size="sm" className="text-white" />
+            ) : (
+              <span>{Strings.chat.send}</span>
+            )}
+          </Button>
+        </div>
+      </div>
+      {isLoading && (
+        <div className="absolute -top-8 left-0 flex items-center gap-2 text-sm text-gray-400">
+          <Spinner size="sm" />
+          <span>{Strings.chat.thinking}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
