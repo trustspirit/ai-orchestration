@@ -55,39 +55,41 @@ export default function Home() {
       <Header />
 
       <main className="relative flex-1 flex overflow-hidden pt-12">
-        <div className="flex w-full max-w-[1200px] mx-auto px-6 gap-6">
-          {/* Left Panel - Configuration (Collapsible) */}
-          <div
-            className={`flex-shrink-0 py-6 overflow-y-auto hidden lg:block transition-all duration-300 ${
-              sidebarOpen ? 'w-72' : 'w-12'
-            }`}
-          >
-            <Sidebar
-              isOpen={sidebarOpen}
-              onToggle={() => setSidebarOpen(!sidebarOpen)}
-              providers={providers}
-              providerSettings={providerSettings}
-              globalRole={globalRole}
-              enabledCount={enabledCount}
-              hasError={!!settingsError}
-              onSettingsChange={handleSettingsChange}
-              onRoleChange={updateGlobalRole}
-            />
-          </div>
+        {/* Left Panel - Configuration (Fixed Position) */}
+        <div
+          className={`fixed left-6 top-[60px] bottom-6 overflow-y-auto hidden lg:block transition-all duration-300 z-40 ${
+            sidebarOpen ? 'w-72' : 'w-12'
+          }`}
+        >
+          <Sidebar
+            isOpen={sidebarOpen}
+            onToggle={() => setSidebarOpen(!sidebarOpen)}
+            providers={providers}
+            providerSettings={providerSettings}
+            globalRole={globalRole}
+            enabledCount={enabledCount}
+            hasError={!!settingsError}
+            onSettingsChange={handleSettingsChange}
+            onRoleChange={updateGlobalRole}
+          />
+        </div>
 
-          {/* Right Panel - Chat */}
-          {settingsError ? (
-            <ServerOfflineBanner onRetry={() => window.location.reload()} />
-          ) : (
-            <ChatArea
-              messages={chat.messages}
-              isLoading={chat.isLoading}
-              error={chat.error}
-              providers={providers}
-              enabledCount={enabledCount}
-              onSendMessage={chat.sendMessage}
-            />
-          )}
+        {/* Center Panel - Chat (Centered) */}
+        <div className="flex-1 flex justify-center px-6">
+          <div className="w-full max-w-4xl">
+            {settingsError ? (
+              <ServerOfflineBanner onRetry={() => window.location.reload()} />
+            ) : (
+              <ChatArea
+                messages={chat.messages}
+                isLoading={chat.isLoading}
+                error={chat.error}
+                providers={providers}
+                enabledCount={enabledCount}
+                onSendMessage={chat.sendMessage}
+              />
+            )}
+          </div>
         </div>
       </main>
     </div>
