@@ -138,7 +138,11 @@ export interface ProviderDisplayInfo {
  */
 export const AVAILABLE_MODELS: Record<AiProviderName, ModelInfo[]> = {
   openai: [
-    { id: 'gpt-5.2-instant', name: 'GPT-5.2 Instant', description: 'Latest: fastest and most affordable' },
+    {
+      id: 'gpt-5.2-instant',
+      name: 'GPT-5.2 Instant',
+      description: 'Latest: fastest and most affordable',
+    },
     { id: 'gpt-5.2-thinking', name: 'GPT-5.2 Thinking', description: 'Latest: enhanced reasoning' },
     { id: 'gpt-5.2-pro', name: 'GPT-5.2 Pro', description: 'Latest: maximum capability' },
     { id: 'gpt-5.1', name: 'GPT-5.1', description: 'Coding & agent optimized' },
@@ -168,14 +172,26 @@ export const AVAILABLE_MODELS: Record<AiProviderName, ModelInfo[]> = {
     { id: 'claude-opus-4-5', name: 'Claude Opus 4.5', description: 'Most powerful and capable' },
     { id: 'claude-sonnet-4-5', name: 'Claude Sonnet 4.5', description: 'Balanced performance' },
     { id: 'claude-haiku-4-5', name: 'Claude Haiku 4.5', description: 'Fast and compact' },
-    { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4', description: 'Previous generation Sonnet' },
+    {
+      id: 'claude-sonnet-4-20250514',
+      name: 'Claude Sonnet 4',
+      description: 'Previous generation Sonnet',
+    },
     { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet', description: 'Legacy Sonnet' },
   ],
   perplexity: [
     { id: 'sonar', name: 'Sonar', description: 'Fast and efficient, real-time web search' },
     { id: 'sonar-pro', name: 'Sonar Pro', description: 'Advanced model with better reasoning' },
-    { id: 'sonar-reasoning', name: 'Sonar Reasoning', description: 'Optimized for complex reasoning tasks' },
-    { id: 'sonar-reasoning-pro', name: 'Sonar Reasoning Pro', description: 'Most powerful reasoning model' },
+    {
+      id: 'sonar-reasoning',
+      name: 'Sonar Reasoning',
+      description: 'Optimized for complex reasoning tasks',
+    },
+    {
+      id: 'sonar-reasoning-pro',
+      name: 'Sonar Reasoning Pro',
+      description: 'Most powerful reasoning model',
+    },
   ],
 };
 
@@ -183,10 +199,14 @@ export const AVAILABLE_MODELS: Record<AiProviderName, ModelInfo[]> = {
  * Default prompts for each provider
  */
 export const DEFAULT_PROVIDER_PROMPTS: Record<AiProviderName, string> = {
-  openai: 'You are a helpful AI assistant powered by OpenAI. Provide clear, accurate, and well-structured responses.',
-  gemini: 'You are a helpful AI assistant powered by Google Gemini. Provide informative and balanced responses.',
-  claude: 'You are a helpful AI assistant powered by Anthropic Claude. Provide thoughtful, nuanced, and harmless responses.',
-  perplexity: 'You are a helpful AI assistant powered by Perplexity with real-time web access. Provide up-to-date and well-researched responses.',
+  openai:
+    'You are a helpful AI assistant powered by OpenAI. Provide clear, accurate, and well-structured responses.',
+  gemini:
+    'You are a helpful AI assistant powered by Google Gemini. Provide informative and balanced responses.',
+  claude:
+    'You are a helpful AI assistant powered by Anthropic Claude. Provide thoughtful, nuanced, and harmless responses.',
+  perplexity:
+    'You are a helpful AI assistant powered by Perplexity with real-time web access. Provide up-to-date and well-researched responses.',
 };
 
 /**

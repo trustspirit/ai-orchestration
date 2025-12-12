@@ -85,4 +85,3 @@ export enum AvatarVariant {
   AI = 'ai',
   System = 'system',
 }
-

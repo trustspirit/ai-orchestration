@@ -32,4 +32,3 @@ export type SizeType = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
  * Common size subset
  */
 export type CommonSizeType = 'sm' | 'md' | 'lg';
-

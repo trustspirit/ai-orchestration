@@ -28,34 +28,30 @@ const iconSizeMap: Record<CommonSizeType, string> = {
   lg: 'w-5 h-5',
 };
 
-export const Avatar = ({
-  variant = 'user',
-  size = 'md',
-  children,
-  className,
-}: AvatarProps) => {
-  const defaultIcon = variant === 'user' ? (
-    <svg className={iconSizeMap[size]} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-      />
-    </svg>
-  ) : (
-    <svg className={iconSizeMap[size]} viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 12L6 6M12 12L18 6M12 12L6 18M12 12L18 18"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        opacity="0.6"
-      />
-      <circle cx="12" cy="12" r="3" fill="currentColor" />
-      <circle cx="12" cy="12" r="1.5" fill="black" />
-    </svg>
-  );
+export const Avatar = ({ variant = 'user', size = 'md', children, className }: AvatarProps) => {
+  const defaultIcon =
+    variant === 'user' ? (
+      <svg className={iconSizeMap[size]} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+        />
+      </svg>
+    ) : (
+      <svg className={iconSizeMap[size]} viewBox="0 0 24 24" fill="none">
+        <path
+          d="M12 12L6 6M12 12L18 6M12 12L6 18M12 12L18 18"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          opacity="0.6"
+        />
+        <circle cx="12" cy="12" r="3" fill="currentColor" />
+        <circle cx="12" cy="12" r="1.5" fill="black" />
+      </svg>
+    );
 
   return (
     <div
