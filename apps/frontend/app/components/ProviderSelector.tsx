@@ -41,11 +41,8 @@ export function ProviderSelector({
         })}
       </div>
       {availableProviders.length === 0 && (
-        <p className="text-sm text-amber-400 mt-2">
-          {Strings.chat.noProviders}
-        </p>
+        <p className="text-sm text-amber-400 mt-2">{Strings.chat.noProviders}</p>
       )}
     </div>
   );
 }
-

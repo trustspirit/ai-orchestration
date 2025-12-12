@@ -63,7 +63,10 @@ export async function sendChatMessage(request: ChatRequest): Promise<Orchestrati
   return response.json();
 }
 
-export async function checkHealth(): Promise<{ status: string; availableProviders: AiProviderName[] }> {
+export async function checkHealth(): Promise<{
+  status: string;
+  availableProviders: AiProviderName[];
+}> {
   const response = await fetch(`${API_BASE_URL}/orchestration/health`);
   if (!response.ok) {
     throw new Error('Health check failed');

@@ -37,7 +37,9 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center justify-between text-sm"
       >
-        <span>{Strings.chat.individualResponses} ({responses.length})</span>
+        <span>
+          {Strings.chat.individualResponses} ({responses.length})
+        </span>
         <svg
           className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
           fill="none"
@@ -58,7 +60,9 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
             </div>
             {consensus.keyPoints.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Key Points</p>
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Key Points
+                </p>
                 <ul className="space-y-1">
                   {consensus.keyPoints.map((point, idx) => (
                     <li key={idx} className="text-sm text-gray-300 flex items-start gap-2">
@@ -71,7 +75,9 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
             )}
             {consensus.differences.length > 0 && (
               <div className="mt-4 space-y-2">
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Differences</p>
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                  Differences
+                </p>
                 <ul className="space-y-1">
                   {consensus.differences.map((diff, idx) => (
                     <li key={idx} className="text-sm text-gray-400 flex items-start gap-2">
@@ -91,18 +97,15 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
               <Card key={response.provider} variant="default" padding="md">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: info.color }}
-                    />
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: info.color }} />
                     <span className="font-medium text-white">{info.displayName}</span>
-                    <Badge variant="default" size="sm">{response.model}</Badge>
+                    <Badge variant="default" size="sm">
+                      {response.model}
+                    </Badge>
                   </div>
                   <span className="text-xs text-gray-500">{response.latencyMs}ms</span>
                 </div>
-                <p className="text-sm text-gray-300 whitespace-pre-wrap">
-                  {response.content}
-                </p>
+                <p className="text-sm text-gray-300 whitespace-pre-wrap">{response.content}</p>
                 {response.usage && (
                   <div className="mt-3 flex gap-3 text-xs text-gray-500">
                     <span>Prompt: {response.usage.promptTokens}</span>
@@ -118,4 +121,3 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
     </div>
   );
 }
-

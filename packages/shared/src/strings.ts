@@ -77,7 +77,8 @@ export const Strings = {
     creative: 'You are a creative thinker who generates innovative and imaginative ideas.',
     technical: 'You are a technical expert who provides precise, detailed technical explanations.',
     educator: 'You are a patient educator who explains concepts clearly and simply.',
-    researcher: 'You are a thorough researcher who provides well-sourced and comprehensive information.',
+    researcher:
+      'You are a thorough researcher who provides well-sourced and comprehensive information.',
   },
 
   // Errors
@@ -114,4 +115,3 @@ export const Strings = {
 } as const;
 
 export type StringsType = typeof Strings;
-

@@ -41,4 +41,3 @@ export function RoleSelector({ selectedRole, onRoleChange }: RoleSelectorProps) 
     />
   );
 }
-

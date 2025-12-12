@@ -20,19 +20,19 @@ export function ProviderConfigPanel({
   const [expandedProvider, setExpandedProvider] = useState<AiProviderName | null>(null);
 
   const getSetting = (provider: AiProviderName): ProviderSetting => {
-    return settings.find((s) => s.provider === provider) || {
-      provider,
-      enabled: false,
-      model: undefined,
-      systemPrompt: undefined,
-    };
+    return (
+      settings.find((s) => s.provider === provider) || {
+        provider,
+        enabled: false,
+        model: undefined,
+        systemPrompt: undefined,
+      }
+    );
   };
 
   const updateSetting = (provider: AiProviderName, updates: Partial<ProviderSetting>) => {
-    const newSettings = settings.map((s) =>
-      s.provider === provider ? { ...s, ...updates } : s
-    );
-    
+    const newSettings = settings.map((s) => (s.provider === provider ? { ...s, ...updates } : s));
+
     // 해당 프로바이더가 없으면 추가
     if (!settings.find((s) => s.provider === provider)) {
       newSettings.push({
@@ -43,14 +43,14 @@ export function ProviderConfigPanel({
         ...updates,
       });
     }
-    
+
     onSettingsChange(newSettings);
   };
 
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-medium text-gray-400 ml-1">AI Providers Configuration</h3>
-      
+
       {providers.map((providerInfo) => {
         const setting = getSetting(providerInfo.name);
         const info = AI_PROVIDER_INFO[providerInfo.name];
@@ -75,16 +75,15 @@ export function ProviderConfigPanel({
                   className="w-10 h-10 rounded-xl flex items-center justify-center"
                   style={{ backgroundColor: `${info.color}20` }}
                 >
-                  <div
-                    className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: info.color }}
-                  />
+                  <div className="w-4 h-4 rounded-full" style={{ backgroundColor: info.color }} />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-white">{info.displayName}</span>
                     {!providerInfo.available && (
-                      <Badge variant="warning" size="sm">Unavailable</Badge>
+                      <Badge variant="warning" size="sm">
+                        Unavailable
+                      </Badge>
                     )}
                   </div>
                   <p className="text-xs text-gray-400">
@@ -104,7 +103,12 @@ export function ProviderConfigPanel({
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </div>
@@ -129,7 +133,9 @@ export function ProviderConfigPanel({
                   label="Custom System Prompt (Optional)"
                   placeholder={DEFAULT_PROVIDER_PROMPTS[providerInfo.name]}
                   value={setting.systemPrompt || ''}
-                  onChange={(e) => updateSetting(providerInfo.name, { systemPrompt: e.target.value })}
+                  onChange={(e) =>
+                    updateSetting(providerInfo.name, { systemPrompt: e.target.value })
+                  }
                   rows={3}
                 />
 
@@ -144,4 +150,3 @@ export function ProviderConfigPanel({
     </div>
   );
 }
-

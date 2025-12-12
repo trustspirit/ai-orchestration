@@ -15,7 +15,7 @@ export const Card = ({
   ...props
 }: CardProps) => {
   const baseStyle = 'rounded-2xl transition-all duration-300';
-  
+
   const variants = {
     default: 'bg-white/5 backdrop-blur-xl border border-white/10',
     elevated: 'bg-white/8 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/20',
@@ -38,4 +38,3 @@ export const Card = ({
     </div>
   );
 };
-

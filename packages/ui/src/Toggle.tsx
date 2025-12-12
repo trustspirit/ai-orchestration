@@ -26,7 +26,9 @@ export const Toggle = ({
   const sizeConfig = sizes[size];
 
   return (
-    <label className={`flex items-center gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+    <label
+      className={`flex items-center gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+    >
       <button
         type="button"
         role="switch"
@@ -50,10 +52,7 @@ export const Toggle = ({
           `}
         />
       </button>
-      {label && (
-        <span className="text-sm font-medium text-gray-200">{label}</span>
-      )}
+      {label && <span className="text-sm font-medium text-gray-200">{label}</span>}
     </label>
   );
 };
-

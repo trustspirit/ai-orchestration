@@ -9,8 +9,18 @@ export function Header() {
         <div className="flex items-center justify-between rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 px-6 py-3 shadow-2xl">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
             </div>
             <div>
@@ -19,10 +29,16 @@ export function Header() {
             </div>
           </div>
           <nav className="flex items-center gap-6">
-            <a href="/" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+            <a
+              href="/"
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+            >
               {Strings.nav.chat}
             </a>
-            <a href="/settings" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
+            <a
+              href="/settings"
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+            >
               {Strings.nav.settings}
             </a>
           </nav>
@@ -31,4 +47,3 @@ export function Header() {
     </header>
   );
 }
-

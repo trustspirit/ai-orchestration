@@ -40,10 +40,7 @@ export class OrchestrationService {
   async orchestrate(request: OrchestrationRequest): Promise<OrchestrationResult> {
     const { prompt, providerSettings, globalSystemRole, conversationHistory = [] } = request;
 
-    const messages: AiMessage[] = [
-      ...conversationHistory,
-      { role: 'user', content: prompt },
-    ];
+    const messages: AiMessage[] = [...conversationHistory, { role: 'user', content: prompt }];
 
     // 활성화된 프로바이더만 필터링하고 설정 적용
     const providerConfigs: ProviderRequestConfig[] = providerSettings
@@ -102,11 +99,9 @@ export class OrchestrationService {
     const synthesisPrompt = this.createSynthesisPrompt(originalQuery, responses);
 
     try {
-      const synthesisResponse = await this.aiService.completeWithProvider(
-        availableProviders[0],
-        {
-          messages: [{ role: 'user', content: synthesisPrompt }],
-          systemPrompt: `You are an expert at analyzing and synthesizing multiple AI responses. 
+      const synthesisResponse = await this.aiService.completeWithProvider(availableProviders[0], {
+        messages: [{ role: 'user', content: synthesisPrompt }],
+        systemPrompt: `You are an expert at analyzing and synthesizing multiple AI responses. 
 Your task is to find common ground, identify key points of agreement, note any differences, 
 and provide a unified, comprehensive answer that represents the consensus view.
 Respond in JSON format with the following structure:
@@ -116,20 +111,16 @@ Respond in JSON format with the following structure:
   "keyPoints": ["point1", "point2", ...],
   "differences": ["difference1", "difference2", ...]
 }`,
-        },
-      );
+      });
 
-      return this.parseConsensusResponse(synthesisResponse.content, responses);
+      return this.parseConsensusResponse(synthesisResponse.content);
     } catch (error) {
       this.logger.warn(`Failed to generate AI consensus: ${error}`);
       return this.createFallbackConsensus(responses);
     }
   }
 
-  private createSynthesisPrompt(
-    query: string,
-    responses: AiCompletionResponse[],
-  ): string {
+  private createSynthesisPrompt(query: string, responses: AiCompletionResponse[]): string {
     const responsesText = responses
       .map((r) => `### Response from ${r.provider} (${r.model}):\n${r.content}`)
       .join('\n\n');
@@ -143,10 +134,7 @@ ${responsesText}
 Please analyze these responses and provide a consensus synthesis.`;
   }
 
-  private parseConsensusResponse(
-    content: string,
-    _responses: AiCompletionResponse[],
-  ): ConsensusResult {
+  private parseConsensusResponse(content: string): ConsensusResult {
     try {
       // Try to extract JSON from the response
       const jsonMatch = content.match(/\{[\s\S]*\}/);
@@ -171,13 +159,9 @@ Please analyze these responses and provide a consensus synthesis.`;
     };
   }
 
-  private createFallbackConsensus(
-    responses: AiCompletionResponse[],
-  ): ConsensusResult {
+  private createFallbackConsensus(responses: AiCompletionResponse[]): ConsensusResult {
     // Simple fallback: combine responses
-    const combinedContent = responses
-      .map((r) => `[${r.provider}]: ${r.content}`)
-      .join('\n\n');
+    const combinedContent = responses.map((r) => `[${r.provider}]: ${r.content}`).join('\n\n');
 
     return {
       summary: combinedContent,

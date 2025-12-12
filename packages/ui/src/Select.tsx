@@ -44,9 +44,7 @@ export const Select = ({
 
   return (
     <div className="flex flex-col gap-2" ref={selectRef}>
-      {label && (
-        <label className="text-sm font-medium text-gray-400 ml-1">{label}</label>
-      )}
+      {label && <label className="text-sm font-medium text-gray-400 ml-1">{label}</label>}
       <div className="relative">
         <button
           type="button"
@@ -71,7 +69,12 @@ export const Select = ({
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </span>
         </button>
@@ -104,4 +107,3 @@ export const Select = ({
     </div>
   );
 };
-

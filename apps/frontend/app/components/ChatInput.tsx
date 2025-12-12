@@ -77,4 +77,3 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
     </div>
   );
 }
-

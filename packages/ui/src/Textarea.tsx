@@ -29,9 +29,7 @@ export const Textarea = ({
 
   return (
     <div className="flex flex-col gap-2">
-      {label && (
-        <label className="text-sm font-medium text-gray-400 ml-1">{label}</label>
-      )}
+      {label && <label className="text-sm font-medium text-gray-400 ml-1">{label}</label>}
       <textarea
         ref={textareaRef}
         className={`
@@ -48,4 +46,3 @@ export const Textarea = ({
     </div>
   );
 };
-

@@ -79,10 +79,7 @@ export default function Home() {
 
               {/* Global Role Selector */}
               <div className="mb-6">
-                <RoleSelector
-                  selectedRole={selectedRole}
-                  onRoleChange={setSelectedRole}
-                />
+                <RoleSelector selectedRole={selectedRole} onRoleChange={setSelectedRole} />
               </div>
 
               {/* Provider Configuration */}
@@ -119,48 +116,56 @@ export default function Home() {
                 <Card variant="default" padding="lg" className="text-center">
                   <div className="py-12">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        />
                       </svg>
                     </div>
                     <h3 className="text-xl font-semibold mb-2">{Strings.app.name}</h3>
                     <p className="text-gray-400 max-w-md mx-auto mb-4">
-                      Configure your AI providers on the left panel. Each provider can have its own model and custom system prompt.
+                      Configure your AI providers on the left panel. Each provider can have its own
+                      model and custom system prompt.
                     </p>
                     <div className="flex flex-wrap justify-center gap-2">
-                      {providers.filter(p => p.available).map((p) => (
-                        <span
-                          key={p.name}
-                          className="px-3 py-1 rounded-full text-xs font-medium"
-                          style={{ backgroundColor: `${p.color}20`, color: p.color }}
-                        >
-                          {p.displayName}
-                        </span>
-                      ))}
+                      {providers
+                        .filter((p) => p.available)
+                        .map((p) => (
+                          <span
+                            key={p.name}
+                            className="px-3 py-1 rounded-full text-xs font-medium"
+                            style={{ backgroundColor: `${p.color}20`, color: p.color }}
+                          >
+                            {p.displayName}
+                          </span>
+                        ))}
                     </div>
                   </div>
                 </Card>
               ) : (
-                chat.messages.map((message) => (
-                  <ChatMessage key={message.id} message={message} />
-                ))
+                chat.messages.map((message) => <ChatMessage key={message.id} message={message} />)
               )}
-              
+
               {chat.error && (
                 <Card variant="default" padding="md" className="border-red-500/30 bg-red-500/10">
                   <p className="text-red-400">{chat.error}</p>
                 </Card>
               )}
-              
+
               <div ref={messagesEndRef} />
             </div>
 
             {/* Response Details */}
             {chat.lastConsensus && chat.lastResponses && !showConfig && (
-              <ResponseDetails
-                consensus={chat.lastConsensus}
-                responses={chat.lastResponses}
-              />
+              <ResponseDetails consensus={chat.lastConsensus} responses={chat.lastResponses} />
             )}
 
             {/* Chat Input */}

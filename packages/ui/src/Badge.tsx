@@ -15,7 +15,7 @@ export const Badge = ({
   ...props
 }: BadgeProps) => {
   const baseStyle = 'inline-flex items-center font-medium rounded-full';
-  
+
   const variants = {
     default: 'bg-white/10 text-white',
     success: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
@@ -38,4 +38,3 @@ export const Badge = ({
     </span>
   );
 };
-

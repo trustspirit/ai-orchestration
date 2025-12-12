@@ -1,12 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AiProviderName, AVAILABLE_MODELS } from '@repo/shared';
 import { AiProvider, AiCompletionRequest, AiCompletionResponse } from './ai-provider.interface';
-import {
-  OpenAiProvider,
-  GeminiProvider,
-  ClaudeProvider,
-  PerplexityProvider,
-} from './providers';
+import { OpenAiProvider, GeminiProvider, ClaudeProvider, PerplexityProvider } from './providers';
 
 export interface ProviderRequestConfig {
   provider: AiProviderName;
@@ -95,9 +90,7 @@ export class AiService {
       if (result.status === 'fulfilled') {
         successfulResults.push(result.value);
       } else {
-        this.logger.warn(
-          `Provider ${availableConfigs[index].provider} failed: ${result.reason}`,
-        );
+        this.logger.warn(`Provider ${availableConfigs[index].provider} failed: ${result.reason}`);
       }
     });
 
