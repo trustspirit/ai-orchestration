@@ -29,25 +29,45 @@ export const OrchestratorIcon = ({
         xmlns="http://www.w3.org/2000/svg"
         className={`${sizes[size]} text-white ${className || ''}`}
       >
-        {/* Outer rings */}
-        <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="1" opacity="0.15" />
-        <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="1" opacity="0.1" />
-        {/* Connecting lines */}
+        {/* Asymmetric molecular/network structure */}
+        {/* Main connections */}
         <path
-          d="M40 40L18 18M40 40L62 18M40 40L18 62M40 40L62 62"
+          d="M32 28L20 16M32 28L48 20M32 28L28 48M32 28L52 36"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
+        <path
+          d="M52 36L64 28M52 36L60 56M52 36L28 48"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="round"
           opacity="0.4"
         />
-        {/* Corner nodes */}
-        <circle cx="18" cy="18" r="4" fill="currentColor" opacity="0.5" />
-        <circle cx="62" cy="18" r="4" fill="currentColor" opacity="0.5" />
-        <circle cx="18" cy="62" r="4" fill="currentColor" opacity="0.5" />
-        <circle cx="62" cy="62" r="4" fill="currentColor" opacity="0.5" />
-        {/* Center hub */}
-        <circle cx="40" cy="40" r="10" fill="currentColor" opacity="0.9" />
-        <circle cx="40" cy="40" r="5" fill="black" />
+        <path
+          d="M28 48L16 58M28 48L44 64"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          opacity="0.3"
+        />
+
+        {/* Nodes - varying sizes for depth */}
+        <circle cx="20" cy="16" r="3" fill="currentColor" opacity="0.4" />
+        <circle cx="48" cy="20" r="2.5" fill="currentColor" opacity="0.5" />
+        <circle cx="64" cy="28" r="2" fill="currentColor" opacity="0.35" />
+        <circle cx="16" cy="58" r="2.5" fill="currentColor" opacity="0.4" />
+        <circle cx="60" cy="56" r="3" fill="currentColor" opacity="0.45" />
+        <circle cx="44" cy="64" r="2" fill="currentColor" opacity="0.35" />
+
+        {/* Secondary nodes */}
+        <circle cx="28" cy="48" r="4" fill="currentColor" opacity="0.7" />
+        <circle cx="52" cy="36" r="3.5" fill="currentColor" opacity="0.6" />
+
+        {/* Primary hub - slightly off-center */}
+        <circle cx="32" cy="28" r="6" fill="currentColor" opacity="0.9" />
+        <circle cx="32" cy="28" r="3" fill="black" />
       </svg>
     );
   }
@@ -59,24 +79,45 @@ export const OrchestratorIcon = ({
       xmlns="http://www.w3.org/2000/svg"
       className={`${sizes[size]} text-current ${animated ? 'animate-pulse' : ''} ${className || ''}`}
     >
-      {/* Outer ring */}
-      <circle cx="14" cy="14" r="12" stroke="currentColor" strokeWidth="1" opacity="0.3" />
-      {/* Connecting lines */}
+      {/* Asymmetric molecular structure - compact version */}
+      {/* Connections */}
       <path
-        d="M14 14L7 7M14 14L21 7M14 14L7 21M14 14L21 21"
+        d="M11 10L6 5M11 10L18 7M11 10L9 17M11 10L19 13"
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
         opacity="0.5"
       />
-      {/* Corner nodes */}
-      <circle cx="7" cy="7" r="2" fill="currentColor" opacity="0.6" />
-      <circle cx="21" cy="7" r="2" fill="currentColor" opacity="0.6" />
-      <circle cx="7" cy="21" r="2" fill="currentColor" opacity="0.6" />
-      <circle cx="21" cy="21" r="2" fill="currentColor" opacity="0.6" />
-      {/* Center hub */}
-      <circle cx="14" cy="14" r="4" fill="currentColor" />
-      <circle cx="14" cy="14" r="2" fill="black" />
+      <path
+        d="M19 13L24 10M19 13L22 21M19 13L9 17"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      <path
+        d="M9 17L5 22M9 17L16 23"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.3"
+      />
+
+      {/* Outer nodes */}
+      <circle cx="6" cy="5" r="1.5" fill="currentColor" opacity="0.4" />
+      <circle cx="18" cy="7" r="1.2" fill="currentColor" opacity="0.5" />
+      <circle cx="24" cy="10" r="1" fill="currentColor" opacity="0.35" />
+      <circle cx="5" cy="22" r="1.2" fill="currentColor" opacity="0.4" />
+      <circle cx="22" cy="21" r="1.5" fill="currentColor" opacity="0.45" />
+      <circle cx="16" cy="23" r="1" fill="currentColor" opacity="0.35" />
+
+      {/* Secondary hubs */}
+      <circle cx="9" cy="17" r="2" fill="currentColor" opacity="0.7" />
+      <circle cx="19" cy="13" r="1.8" fill="currentColor" opacity="0.6" />
+
+      {/* Primary hub */}
+      <circle cx="11" cy="10" r="3" fill="currentColor" />
+      <circle cx="11" cy="10" r="1.5" fill="black" />
     </svg>
   );
 };
