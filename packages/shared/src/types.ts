@@ -92,23 +92,32 @@ export const AVAILABLE_MODELS: Record<
     { id: 'o1', name: 'o1', description: 'Original o-series model' },
   ],
   gemini: [
-    { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Best for complex tasks' },
-    { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', description: 'Fast and versatile' },
-    { id: 'gemini-pro', name: 'Gemini Pro', description: 'Balanced performance' },
+    // Gemini 3 계열
+    { id: 'gemini-3', name: 'Gemini 3', description: 'Latest flagship model' },
+    { id: 'gemini-3-pro', name: 'Gemini 3 Pro', description: 'Enhanced Gemini 3' },
+    // Nano Banana 계열
+    { id: 'nano-banana', name: 'Nano Banana', description: 'Fast and efficient' },
+    { id: 'nano-banana-pro', name: 'Nano Banana Pro', description: 'Enhanced Nano Banana' },
+    // Veo 계열 (Video)
+    { id: 'veo-3.1', name: 'Veo 3.1', description: 'Video generation model' },
+    { id: 'veo-3.1-fast', name: 'Veo 3.1 Fast', description: 'Fast video generation' },
+    // 이전 세대
+    { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: 'Previous generation Pro' },
+    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Previous generation Flash' },
   ],
   claude: [
+    // Claude 4.5 계열 (Latest)
+    { id: 'claude-opus-4-5', name: 'Claude Opus 4.5', description: 'Most powerful and capable' },
+    { id: 'claude-sonnet-4-5', name: 'Claude Sonnet 4.5', description: 'Balanced performance' },
+    { id: 'claude-haiku-4-5', name: 'Claude Haiku 4.5', description: 'Fast and compact' },
+    // Claude 4 계열
     {
       id: 'claude-sonnet-4-20250514',
       name: 'Claude Sonnet 4',
-      description: 'Latest and most capable',
+      description: 'Previous generation Sonnet',
     },
-    {
-      id: 'claude-3-5-sonnet-20241022',
-      name: 'Claude 3.5 Sonnet',
-      description: 'Best for most tasks',
-    },
-    { id: 'claude-3-opus-20240229', name: 'Claude 3 Opus', description: 'Most powerful' },
-    { id: 'claude-3-haiku-20240307', name: 'Claude 3 Haiku', description: 'Fast and compact' },
+    // Claude 3.5 계열
+    { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet', description: 'Legacy Sonnet' },
   ],
   perplexity: [
     {

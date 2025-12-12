@@ -11,7 +11,7 @@ export class GeminiProvider implements AiProvider {
 
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY || '';
-    this.defaultModel = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
+    this.defaultModel = process.env.GEMINI_MODEL || 'gemini-3';
   }
 
   private getBaseUrl(model: string): string {

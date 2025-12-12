@@ -12,7 +12,7 @@ export class ClaudeProvider implements AiProvider {
 
   constructor() {
     this.apiKey = process.env.ANTHROPIC_API_KEY || '';
-    this.defaultModel = process.env.CLAUDE_MODEL || 'claude-sonnet-4-20250514';
+    this.defaultModel = process.env.CLAUDE_MODEL || 'claude-sonnet-4-5';
   }
 
   isAvailable(): boolean {
