@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { APP_NAME } from '@repo/shared';
+import { Header } from './components';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -13,7 +14,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#0a0a0f',
+  themeColor: '#000000',
 };
 
 export const metadata: Metadata = {
@@ -35,7 +36,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      <body className={`${inter.className} antialiased bg-black`}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

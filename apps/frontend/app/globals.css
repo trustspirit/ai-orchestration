@@ -26,10 +26,13 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial,
+    sans-serif;
   background-color: var(--apple-bg-primary);
   color: var(--apple-text-primary);
   -webkit-font-smoothing: antialiased;
@@ -70,8 +73,12 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
@@ -86,26 +93,31 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 /* Heartbeat / Online indicator animation */
 @keyframes heartbeat {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.6);
+    box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.5);
   }
   50% {
-    opacity: 0.85;
-    transform: scale(1.1);
-    box-shadow: 0 0 0 6px rgba(48, 209, 88, 0);
+    opacity: 0.7;
+    box-shadow: 0 0 0 4px rgba(48, 209, 88, 0);
   }
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 4px 2px rgba(48, 209, 88, 0.3);
   }
   50% {
@@ -175,11 +187,11 @@ body {
   .animate-in {
     animation: fadeIn 0.2s ease-out;
   }
-  
+
   .slide-in-from-top-2 {
     animation: slideFromTop 0.2s ease-out;
   }
-  
+
   @keyframes slideFromTop {
     from {
       opacity: 0;

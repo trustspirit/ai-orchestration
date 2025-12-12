@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { BadgeVariantType } from './types';
 
-type SizeType = 'sm' | 'md';
+type SizeType = 'sm' | 'md' | 'lg';
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariantType;
@@ -19,8 +19,9 @@ const variantMap: Record<BadgeVariantType, string> = {
 };
 
 const sizeMap: Record<SizeType, string> = {
-  sm: 'px-2 py-0.5 text-xs',
-  md: 'px-3 py-1 text-sm',
+  sm: 'px-1.5 py-0.5 text-[10px]',
+  md: 'px-2 py-0.5 text-xs',
+  lg: 'px-3 py-1 text-sm',
 };
 
 export const Badge = ({

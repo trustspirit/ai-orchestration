@@ -11,9 +11,9 @@ interface StatusDotProps {
 }
 
 const sizeMap: Record<CommonSizeType, string> = {
-  sm: 'w-1.5 h-1.5',
-  md: 'w-2 h-2',
-  lg: 'w-2.5 h-2.5',
+  sm: 'w-1.5 h-1.5 min-w-[6px] min-h-[6px]',
+  md: 'w-2 h-2 min-w-[8px] min-h-[8px]',
+  lg: 'w-2.5 h-2.5 min-w-[10px] min-h-[10px]',
 };
 
 const statusMap: Record<StatusType, string> = {
@@ -39,6 +39,8 @@ export const StatusDot = ({
         ${statusMap[status]} 
         ${borderStyles}
         flex-shrink-0
+        inline-block
+        aspect-square
         ${className || ''}
       `}
     />

@@ -8,7 +8,7 @@ import {
   DEFAULT_PROVIDER_PROMPTS,
 } from '@repo/shared';
 import type { AiProviderName, RoleConfig } from '@repo/shared';
-import { Header, ProviderIcon, roleOptionsWithInherit } from '../components';
+import { ProviderIcon, roleOptionsWithInherit } from '../components';
 import { useSettings } from '../hooks/useSettings';
 
 const defaultRoles: RoleConfig[] = [
@@ -51,7 +51,7 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-black text-white flex items-center justify-center pt-12">
         <div className="flex flex-col items-center gap-4">
           <Spinner size="lg" />
           <p className="text-white/50 text-sm">Loading settings...</p>
@@ -61,10 +61,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Header />
-
-      <main className="relative pt-24 pb-8 px-6 max-w-3xl mx-auto">
+    <div className="min-h-screen bg-black text-white pt-12">
+      <main className="relative pt-12 pb-8 px-6 max-w-3xl mx-auto">
         {/* Title */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-semibold text-white/90">{Strings.settings.title}</h1>

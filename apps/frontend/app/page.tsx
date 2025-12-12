@@ -1,14 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Header,
-  Sidebar,
-  ChatArea,
-  ServerOfflineBanner,
-  LoadingScreen,
-  getRolePrompt,
-} from './components';
+import { Sidebar, ChatArea, ServerOfflineBanner, LoadingScreen, getRolePrompt } from './components';
 import { useChat } from './hooks/useChat';
 import { useSettings } from './hooks/useSettings';
 
@@ -51,10 +44,8 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-black text-[#f5f5f7] flex flex-col overflow-hidden">
-      <Header />
-
-      <main className="relative flex-1 flex overflow-hidden pt-12">
+    <div className="h-screen bg-black text-[#f5f5f7] flex flex-col overflow-hidden pt-12">
+      <main className="relative flex-1 flex overflow-hidden">
         {/* Left Panel - Configuration (Fixed Position) */}
         <div
           className={`fixed left-6 top-[60px] bottom-6 overflow-y-auto hidden lg:block transition-all duration-300 z-40 ${

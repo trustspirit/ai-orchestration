@@ -46,7 +46,11 @@ export function Sidebar({
   }
 
   return (
-    <CollapsedSidebar onExpand={onToggle} providers={providers} providerSettings={providerSettings} />
+    <CollapsedSidebar
+      onExpand={onToggle}
+      providers={providers}
+      providerSettings={providerSettings}
+    />
   );
 }
 
@@ -92,7 +96,10 @@ function ExpandedSidebar({
             </button>
             <h2 className="text-sm font-medium text-[#f5f5f7]">Configuration</h2>
           </div>
-          <a href="/settings" className="text-xs text-[#0071e3] hover:text-[#0077ed] transition-colors">
+          <a
+            href="/settings"
+            className="text-xs text-[#0071e3] hover:text-[#0077ed] transition-colors"
+          >
             Advanced →
           </a>
         </div>
@@ -126,7 +133,7 @@ interface CollapsedSidebarProps {
 
 function CollapsedSidebar({ onExpand, providers, providerSettings }: CollapsedSidebarProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 pt-1 pr-1">
       <button
         onClick={onExpand}
         className="w-10 h-10 rounded-xl bg-[#1d1d1f] hover:bg-[#2d2d2d] flex items-center justify-center transition-colors border border-[rgba(255,255,255,0.08)]"
@@ -149,7 +156,7 @@ function CollapsedSidebar({ onExpand, providers, providerSettings }: CollapsedSi
           <button
             key={p.name}
             onClick={onExpand}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all relative border ${
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all relative overflow-visible border ${
               isActive
                 ? 'bg-white/10 border-white/20'
                 : isReady
@@ -159,10 +166,11 @@ function CollapsedSidebar({ onExpand, providers, providerSettings }: CollapsedSi
             title={`${info.displayName} (${status})`}
             style={{ color: isActive ? info.color : isReady ? info.color : undefined }}
           >
-            <ProviderIcon provider={p.name} className={`w-5 h-5 ${isOffline ? 'text-white/30' : ''}`} />
-            <span className="absolute -top-0.5 -right-0.5">
-              <StatusDot status={status} size="lg" showBorder />
-            </span>
+            <ProviderIcon
+              provider={p.name}
+              className={`w-5 h-5 ${isOffline ? 'text-white/30' : ''}`}
+            />
+            <StatusDot status={status} size="lg" showBorder className="absolute -top-1 -right-1" />
           </button>
         );
       })}
@@ -184,7 +192,12 @@ function CollapsedSidebar({ onExpand, providers, providerSettings }: CollapsedSi
 function CollapseIcon() {
   return (
     <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+      />
     </svg>
   );
 }
@@ -192,7 +205,12 @@ function CollapseIcon() {
 function ExpandIcon() {
   return (
     <svg className="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M13 5l7 7-7 7M5 5l7 7-7 7"
+      />
     </svg>
   );
 }
@@ -206,8 +224,12 @@ function SettingsIcon() {
         strokeWidth={1.5}
         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
       />
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
     </svg>
   );
 }
-
