@@ -12,7 +12,7 @@ export class OpenAiProvider implements AiProvider {
 
   constructor() {
     this.apiKey = process.env.OPENAI_API_KEY || '';
-    this.defaultModel = process.env.OPENAI_MODEL || 'gpt-5.1';
+    this.defaultModel = process.env.OPENAI_MODEL || 'gpt-5.2-instant';
   }
 
   isAvailable(): boolean {

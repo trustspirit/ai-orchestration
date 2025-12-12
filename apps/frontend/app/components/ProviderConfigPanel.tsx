@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, Toggle, Select, Textarea } from '@repo/ui';
+import { Toggle, Select, Textarea } from '@repo/ui';
 import { AI_PROVIDER_INFO, DEFAULT_PROVIDER_PROMPTS } from '@repo/shared';
 import type { AiProviderName } from '@repo/shared';
 import type { ProviderInfo, ProviderSetting } from '../lib/api';
@@ -34,7 +34,6 @@ export function ProviderConfigPanel({
   const updateSetting = (provider: AiProviderName, updates: Partial<ProviderSetting>) => {
     const newSettings = settings.map((s) => (s.provider === provider ? { ...s, ...updates } : s));
 
-    // 해당 프로바이더가 없으면 추가
     if (!settings.find((s) => s.provider === provider)) {
       newSettings.push({
         provider,
@@ -50,7 +49,9 @@ export function ProviderConfigPanel({
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-gray-400 ml-1">AI Providers</h3>
+      <h3 className="text-xs font-normal text-[#86868b] uppercase tracking-wide mb-3">
+        AI Providers
+      </h3>
 
       {providers.map((providerInfo) => {
         const setting = getSetting(providerInfo.name);
@@ -60,42 +61,38 @@ export function ProviderConfigPanel({
         const modelInfo = providerInfo.models.find((m) => m.id === currentModel);
 
         return (
-          <Card
+          <div
             key={providerInfo.name}
-            variant="default"
-            padding="none"
-            className={`overflow-visible transition-all duration-300 ${
-              !providerInfo.available ? 'opacity-50' : ''
-            }`}
+            className={`rounded-xl border border-[rgba(255,255,255,0.08)] overflow-visible transition-all duration-200 ${
+              !providerInfo.available ? 'opacity-40' : ''
+            } ${setting.enabled ? 'bg-[rgba(255,255,255,0.04)]' : 'bg-transparent'}`}
           >
-            {/* Header - Compact Layout */}
+            {/* Header */}
             <div
-              className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-white/5 transition-colors gap-2"
+              className="flex items-center justify-between px-3 py-2.5 cursor-pointer hover:bg-[rgba(255,255,255,0.04)] transition-colors gap-2"
               onClick={() => setExpandedProvider(isExpanded ? null : providerInfo.name)}
             >
               {/* Left: Icon + Name + Model */}
               <div className="flex items-center gap-2.5 flex-1 min-w-0">
                 <div
-                  className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center"
-                  style={{ backgroundColor: `${info.color}20`, color: info.color }}
+                  className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center"
+                  style={{ backgroundColor: `${info.color}15`, color: info.color }}
                 >
                   <ProviderIcon provider={providerInfo.name} className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-medium text-white text-sm">
-                      {info.displayName}
-                    </span>
+                    <span className="font-medium text-[#f5f5f7] text-sm">{info.displayName}</span>
                     {providerInfo.available ? (
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-heartbeat flex-shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#30d158] animate-heartbeat flex-shrink-0" />
                     ) : (
-                      <span className="text-[10px] text-yellow-500/80 font-medium flex-shrink-0">
+                      <span className="text-[10px] text-[#ff9f0a] font-medium flex-shrink-0">
                         N/A
                       </span>
                     )}
                   </div>
                   {providerInfo.available && setting.enabled && (
-                    <span className="text-[10px] text-gray-500 truncate">
+                    <span className="text-[10px] text-[#6e6e73] truncate">
                       {modelInfo?.name || currentModel}
                     </span>
                   )}
@@ -104,16 +101,18 @@ export function ProviderConfigPanel({
 
               {/* Right: Toggle + Arrow */}
               <div className="flex items-center gap-1.5 flex-shrink-0">
-                <Toggle
-                  checked={setting.enabled}
-                  onChange={(checked) => {
-                    updateSetting(providerInfo.name, { enabled: checked });
-                  }}
-                  disabled={!providerInfo.available}
-                  size="sm"
-                />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <Toggle
+                    checked={setting.enabled}
+                    onChange={(checked) => {
+                      updateSetting(providerInfo.name, { enabled: checked });
+                    }}
+                    disabled={!providerInfo.available}
+                    size="sm"
+                  />
+                </div>
                 <svg
-                  className={`w-3.5 h-3.5 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                  className={`w-3.5 h-3.5 text-[#6e6e73] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -121,7 +120,7 @@ export function ProviderConfigPanel({
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     d="M19 9l-7 7-7-7"
                   />
                 </svg>
@@ -130,7 +129,7 @@ export function ProviderConfigPanel({
 
             {/* Expanded Settings */}
             {isExpanded && providerInfo.available && (
-              <div className="px-3 pb-3 space-y-3 border-t border-white/10 pt-3">
+              <div className="px-3 pb-3 space-y-3 border-t border-[rgba(255,255,255,0.08)] pt-3">
                 {/* Model Selection */}
                 <Select
                   label="Model"
@@ -153,7 +152,7 @@ export function ProviderConfigPanel({
                 />
               </div>
             )}
-          </Card>
+          </div>
         );
       })}
     </div>

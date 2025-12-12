@@ -17,6 +17,9 @@ export interface ChatMessage {
   content: string;
   timestamp: Date;
   provider?: AiProviderName;
+  // For assistant messages - include individual responses
+  responses?: ProviderResponse[];
+  consensus?: ConsensusResult;
 }
 
 export interface OrchestrationResponse {
@@ -75,8 +78,16 @@ export const AVAILABLE_MODELS: Record<
   { id: string; name: string; description: string }[]
 > = {
   openai: [
-    // GPT-5 계열
-    { id: 'gpt-5.1', name: 'GPT-5.1', description: 'Latest: coding & agent optimized' },
+    // GPT-5.2 계열 (Latest)
+    {
+      id: 'gpt-5.2-instant',
+      name: 'GPT-5.2 Instant',
+      description: 'Latest: fastest and most affordable',
+    },
+    { id: 'gpt-5.2-thinking', name: 'GPT-5.2 Thinking', description: 'Latest: enhanced reasoning' },
+    { id: 'gpt-5.2-pro', name: 'GPT-5.2 Pro', description: 'Latest: maximum capability' },
+    // GPT-5.1 계열
+    { id: 'gpt-5.1', name: 'GPT-5.1', description: 'Coding & agent optimized' },
     { id: 'gpt-5', name: 'GPT-5', description: 'Previous generation GPT-5' },
     { id: 'gpt-5-pro', name: 'GPT-5 Pro', description: 'Enhanced GPT-5 version' },
     { id: 'gpt-5-mini', name: 'GPT-5 Mini', description: 'Fast and cost-effective' },

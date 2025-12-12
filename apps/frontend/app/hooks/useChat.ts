@@ -1,15 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import type { ChatMessage, ConsensusResult, ProviderResponse } from '@repo/shared';
+import type { ChatMessage } from '@repo/shared';
 import { sendChatMessage, ProviderSetting } from '../lib/api';
 
 export interface ChatState {
   messages: ChatMessage[];
   isLoading: boolean;
   error: string | null;
-  lastConsensus: ConsensusResult | null;
-  lastResponses: ProviderResponse[] | null;
 }
 
 export function useChat(providerSettings: ProviderSetting[], globalSystemRole?: string) {
@@ -17,8 +15,6 @@ export function useChat(providerSettings: ProviderSetting[], globalSystemRole?: 
     messages: [],
     isLoading: false,
     error: null,
-    lastConsensus: null,
-    lastResponses: null,
   });
 
   const sendMessage = useCallback(
@@ -58,14 +54,15 @@ export function useChat(providerSettings: ProviderSetting[], globalSystemRole?: 
           role: 'assistant',
           content: response.consensus.summary,
           timestamp: new Date(),
+          // Include individual responses with the message
+          responses: response.responses,
+          consensus: response.consensus,
         };
 
         setState((prev) => ({
           ...prev,
           messages: [...prev.messages, assistantMessage],
           isLoading: false,
-          lastConsensus: response.consensus,
-          lastResponses: response.responses,
         }));
       } catch (err) {
         setState((prev) => ({
@@ -83,8 +80,6 @@ export function useChat(providerSettings: ProviderSetting[], globalSystemRole?: 
       messages: [],
       isLoading: false,
       error: null,
-      lastConsensus: null,
-      lastResponses: null,
     });
   }, []);
 

@@ -29,14 +29,16 @@ export const Textarea = ({
 
   return (
     <div className="flex flex-col gap-2">
-      {label && <label className="text-sm font-medium text-gray-400 ml-1">{label}</label>}
+      {label && (
+        <label className="text-sm font-normal text-[#86868b] ml-1">{label}</label>
+      )}
       <textarea
         ref={textareaRef}
         className={`
           px-4 py-3 rounded-xl
-          bg-white/5 border border-white/10 backdrop-blur-md
-          text-white placeholder-gray-500
-          focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent
+          bg-[#1d1d1f] border border-[rgba(255,255,255,0.12)]
+          text-[#f5f5f7] placeholder-[#6e6e73]
+          focus:outline-none focus:ring-2 focus:ring-[rgba(0,113,227,0.5)] focus:border-[#0071e3]
           transition-all duration-200
           resize-none
           ${className || ''}

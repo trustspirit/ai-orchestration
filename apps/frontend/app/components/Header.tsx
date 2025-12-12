@@ -4,45 +4,64 @@ import { Strings } from '@repo/shared';
 
 export function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="mx-auto max-w-[1600px] px-4 py-3">
-        <div className="flex items-center justify-between rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 px-6 py-3 shadow-2xl">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-white tracking-tight">{Strings.app.name}</h1>
-              <p className="text-xs text-gray-400">{Strings.app.tagline}</p>
-            </div>
+    <header className="fixed top-0 left-0 right-0 z-50 apple-glass border-b border-[rgba(255,255,255,0.08)]">
+      <div className="mx-auto max-w-[1200px] h-12 px-6 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-2.5 group">
+          {/* Orchestration Icon - Central hub with connected nodes */}
+          <div className="relative w-7 h-7">
+            <svg
+              className="w-7 h-7"
+              viewBox="0 0 28 28"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Connecting lines */}
+              <path
+                d="M14 14L6 6M14 14L22 6M14 14L6 22M14 14L22 22"
+                stroke="url(#orchestratorGradient)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+              {/* Outer nodes */}
+              <circle cx="6" cy="6" r="2.5" fill="#0071e3" />
+              <circle cx="22" cy="6" r="2.5" fill="#30d158" />
+              <circle cx="6" cy="22" r="2.5" fill="#ff9f0a" />
+              <circle cx="22" cy="22" r="2.5" fill="#bf5af2" />
+              {/* Center hub */}
+              <circle cx="14" cy="14" r="4" fill="url(#centerGradient)" />
+              <circle cx="14" cy="14" r="2.5" fill="#f5f5f7" />
+              {/* Gradients */}
+              <defs>
+                <linearGradient id="orchestratorGradient" x1="6" y1="6" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#0071e3" />
+                  <stop offset="0.5" stopColor="#bf5af2" />
+                  <stop offset="1" stopColor="#30d158" />
+                </linearGradient>
+                <linearGradient id="centerGradient" x1="10" y1="10" x2="18" y2="18" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#0071e3" />
+                  <stop offset="1" stopColor="#bf5af2" />
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
-          <nav className="flex items-center gap-6">
-            <a
-              href="/"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-            >
-              {Strings.nav.chat}
-            </a>
-            <a
-              href="/settings"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-            >
-              {Strings.nav.settings}
-            </a>
-          </nav>
-        </div>
+          <span className="text-sm font-medium text-[#f5f5f7] tracking-tight group-hover:text-[#0071e3] transition-colors">
+            {Strings.app.name}
+          </span>
+        </a>
+        <nav className="flex items-center gap-8">
+          <a
+            href="/"
+            className="text-xs font-normal text-[#f5f5f7] hover:text-[#0071e3] transition-colors"
+          >
+            {Strings.nav.chat}
+          </a>
+          <a
+            href="/settings"
+            className="text-xs font-normal text-[#86868b] hover:text-[#f5f5f7] transition-colors"
+          >
+            {Strings.nav.settings}
+          </a>
+        </nav>
       </div>
     </header>
   );

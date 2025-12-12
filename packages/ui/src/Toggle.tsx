@@ -38,21 +38,21 @@ export const Toggle = ({
         className={`
           ${sizeConfig.track}
           relative inline-flex shrink-0 items-center rounded-full
-          transition-colors duration-300 ease-in-out
-          focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-transparent
-          ${checked ? 'bg-blue-500' : 'bg-white/20'}
+          transition-colors duration-200 ease-in-out
+          focus:outline-none focus:ring-4 focus:ring-[rgba(0,113,227,0.3)]
+          ${checked ? 'bg-[#30d158]' : 'bg-[rgba(255,255,255,0.16)]'}
         `}
       >
         <span
           className={`
             ${sizeConfig.thumb}
-            inline-block transform rounded-full bg-white shadow-lg
-            transition-transform duration-300 ease-in-out
+            inline-block transform rounded-full bg-white shadow-sm
+            transition-transform duration-200 ease-in-out
             ${checked ? sizeConfig.translate : 'translate-x-0.5'}
           `}
         />
       </button>
-      {label && <span className="text-sm font-medium text-gray-200">{label}</span>}
+      {label && <span className="text-sm font-normal text-[#f5f5f7]">{label}</span>}
     </label>
   );
 };
