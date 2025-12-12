@@ -9,9 +9,12 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "clean": "turbo run clean && rm -rf node_modules",
+    "docker:build": "./scripts/docker-build.sh",
+    "docker:up": "./scripts/docker-up.sh",
+    "docker:down": "./scripts/docker-down.sh",
+    "docker:logs": "./scripts/docker-logs.sh",
     "docker:dev": "docker-compose up",
-    "docker:build": "docker-compose build",
-    "docker:down": "docker-compose down"
+    "docker:restart": "docker-compose restart"
   },
   "devDependencies": {
     "turbo": "latest",

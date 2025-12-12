@@ -215,22 +215,22 @@ export const DEFAULT_PROVIDER_PROMPTS: Record<AiProviderName, string> = {
 export const AI_PROVIDER_INFO: Record<AiProviderName, ProviderDisplayInfo> = {
   openai: {
     displayName: 'OpenAI',
-    description: 'GPT-4 and GPT-3.5 models',
+    description: 'GPT-4o, GPT-5, and o-series models',
     color: '#10a37f',
   },
   gemini: {
     displayName: 'Google Gemini',
-    description: 'Gemini Pro and Ultra models',
+    description: 'Gemini 3 and Nano Banana models',
     color: '#4285f4',
   },
   claude: {
     displayName: 'Anthropic Claude',
-    description: 'Claude 3 Opus, Sonnet, and Haiku',
+    description: 'Claude 4.5 Opus, Sonnet, and Haiku',
     color: '#d97757',
   },
   perplexity: {
     displayName: 'Perplexity',
-    description: 'Real-time web-connected AI',
+    description: 'Sonar models with real-time web search',
     color: '#20b8cd',
   },
 };
