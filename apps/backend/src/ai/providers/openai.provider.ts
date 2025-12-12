@@ -49,7 +49,7 @@ export class OpenAiProvider implements AiProvider {
         body: JSON.stringify({
           model,
           messages,
-          max_tokens: request.maxTokens || 2048,
+          max_completion_tokens: request.maxTokens || 2048,
           temperature: request.temperature || 0.7,
         }),
       });

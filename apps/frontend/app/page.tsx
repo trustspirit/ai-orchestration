@@ -227,7 +227,48 @@ export default function Home() {
 
           {/* Right Panel - Chat (Flexible Width) */}
           <div className="flex-1 flex flex-col min-w-0 py-4">
+            {/* Server Offline Banner */}
+            {settingsError && (
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">
+                    <svg
+                      className="w-10 h-10 text-red-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"
+                      />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Server Offline</h2>
+                  <p className="text-gray-400 text-lg mb-4">
+                    Unable to connect to the backend server
+                  </p>
+                  <div className="bg-white/5 rounded-xl px-6 py-4 inline-block">
+                    <p className="text-gray-500 text-sm mb-2">Expected backend URL:</p>
+                    <code className="text-blue-400 font-mono">http://localhost:6201</code>
+                  </div>
+                  <p className="text-gray-500 text-sm mt-6">
+                    Please start the backend server and refresh the page
+                  </p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors"
+                  >
+                    Retry Connection
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Chat Messages (Scrollable) */}
+            {!settingsError && (
             <div className="flex-1 overflow-y-auto pr-2 space-y-4">
               {chat.messages.length === 0 ? (
                 <Card variant="default" padding="lg" className="text-center">
@@ -284,8 +325,10 @@ export default function Home() {
 
               <div ref={messagesEndRef} />
             </div>
+            )}
 
             {/* Chat Input (Fixed at Bottom) */}
+            {!settingsError && (
             <div className="flex-shrink-0 pt-4">
               <ChatInput
                 onSend={chat.sendMessage}
@@ -298,6 +341,7 @@ export default function Home() {
                 </p>
               )}
             </div>
+            )}
           </div>
         </div>
       </main>
