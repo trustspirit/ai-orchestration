@@ -44,7 +44,7 @@ export const Select = ({
 
   return (
     <div className="flex flex-col gap-2" ref={selectRef}>
-      {label && <label className="text-sm font-normal text-[#86868b] ml-1">{label}</label>}
+      {label && <label className="text-sm font-normal text-white/60 ml-1">{label}</label>}
       <div className="relative">
         <button
           type="button"
@@ -52,19 +52,19 @@ export const Select = ({
           disabled={disabled}
           className={`
             w-full px-4 py-3 rounded-xl text-left
-            bg-[#1d1d1f] border border-[rgba(255,255,255,0.12)]
-            text-[#f5f5f7] transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-[rgba(0,113,227,0.5)]
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#2d2d2d] cursor-pointer'}
-            ${isOpen ? 'ring-2 ring-[rgba(0,113,227,0.5)]' : ''}
+            bg-white/10 backdrop-blur-xl border border-white/20
+            text-white transition-all duration-200
+            focus:outline-none focus:ring-2 focus:ring-white/30
+            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/15 cursor-pointer'}
+            ${isOpen ? 'ring-2 ring-white/30' : ''}
           `}
         >
-          <span className={selectedOption ? 'text-[#f5f5f7]' : 'text-[#6e6e73]'}>
+          <span className={selectedOption ? 'text-white' : 'text-white/40'}>
             {selectedOption?.label || placeholder}
           </span>
           <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
             <svg
-              className={`w-4 h-4 text-[#86868b] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 text-white/60 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -80,7 +80,7 @@ export const Select = ({
         </button>
 
         {isOpen && (
-          <div className="absolute z-[100] w-full mt-2 py-1 rounded-xl bg-[#2d2d2d] border border-[rgba(255,255,255,0.12)] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 max-h-[300px] overflow-y-auto">
+          <div className="absolute z-[100] w-full mt-2 py-1 rounded-xl bg-black/80 backdrop-blur-2xl border border-white/20 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 max-h-[300px] overflow-y-auto">
             {options.map((option) => (
               <button
                 key={option.value}
@@ -91,13 +91,13 @@ export const Select = ({
                 }}
                 className={`
                   w-full px-4 py-2.5 text-left transition-colors duration-150
-                  hover:bg-[rgba(255,255,255,0.08)]
-                  ${option.value === value ? 'bg-[rgba(0,113,227,0.15)] text-[#0071e3]' : 'text-[#f5f5f7]'}
+                  hover:bg-white/10
+                  ${option.value === value ? 'bg-white/15 text-white' : 'text-white/80'}
                 `}
               >
                 <div className="font-normal text-sm">{option.label}</div>
                 {option.description && (
-                  <div className="text-xs text-[#86868b] mt-0.5">{option.description}</div>
+                  <div className="text-xs text-white/50 mt-0.5">{option.description}</div>
                 )}
               </button>
             ))}

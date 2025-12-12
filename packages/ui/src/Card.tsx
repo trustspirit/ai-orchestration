@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'outlined';
+  variant?: 'default' | 'elevated' | 'outlined' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
@@ -17,10 +17,10 @@ export const Card = ({
   const baseStyle = 'rounded-2xl transition-all duration-200';
 
   const variants = {
-    default: 'bg-[#1d1d1f] border border-[rgba(255,255,255,0.08)]',
-    elevated:
-      'bg-[#1d1d1f] border border-[rgba(255,255,255,0.08)] shadow-lg shadow-black/40',
-    outlined: 'bg-transparent border border-[rgba(255,255,255,0.12)]',
+    default: 'bg-white/5 backdrop-blur-xl border border-white/10',
+    elevated: 'bg-white/8 backdrop-blur-2xl border border-white/15 shadow-xl shadow-black/20',
+    outlined: 'bg-transparent backdrop-blur-xl border border-white/20',
+    glass: 'bg-white/10 backdrop-blur-2xl border border-white/20 shadow-lg shadow-black/10',
   };
 
   const paddings = {

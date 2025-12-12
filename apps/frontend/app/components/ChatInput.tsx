@@ -38,7 +38,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
 
   return (
     <div className="relative">
-      <div className="flex gap-3 items-center p-4 rounded-2xl bg-[#1d1d1f] border border-[rgba(255,255,255,0.08)]">
+      <div className="flex gap-3 items-center p-4 rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-lg shadow-black/10">
         <textarea
           ref={textareaRef}
           value={input}
@@ -48,7 +48,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
           disabled={isLoading || disabled}
           rows={1}
           className="
-            flex-1 resize-none bg-transparent text-[#f5f5f7] placeholder-[#6e6e73]
+            flex-1 resize-none bg-transparent text-white placeholder-white/40
             focus:outline-none text-base leading-relaxed
             min-h-[24px] max-h-[200px]
           "
@@ -61,7 +61,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
             className="px-5 py-2"
           >
             {isLoading ? (
-              <Spinner size="sm" className="text-white" />
+              <Spinner size="sm" className="text-black" />
             ) : (
               <span>{Strings.chat.send}</span>
             )}

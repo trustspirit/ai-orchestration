@@ -164,21 +164,34 @@ export default function Home() {
                 {providers.map((p) => {
                   const setting = providerSettings.find((s) => s.provider === p.name);
                   const info = AI_PROVIDER_INFO[p.name];
+                  const isActive = setting?.enabled && p.available;
+                  const isReady = !setting?.enabled && p.available;
+                  const isOffline = !p.available;
+                  
                   return (
                     <button
                       key={p.name}
                       onClick={() => setSidebarOpen(true)}
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all relative border border-[rgba(255,255,255,0.08)] ${
-                        setting?.enabled
-                          ? 'bg-[#1d1d1f]'
-                          : 'bg-[#1d1d1f]/50 opacity-40'
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all relative border ${
+                        isActive
+                          ? 'bg-white/10 border-white/20'
+                          : isReady
+                          ? 'bg-white/5 border-white/10 opacity-60'
+                          : 'bg-white/5 border-white/5 opacity-30'
                       }`}
-                      title={`${info.displayName}${setting?.enabled ? ' (enabled)' : ''}`}
-                      style={{ color: info.color }}
+                      title={`${info.displayName}${isActive ? ' (active)' : isReady ? ' (ready)' : ' (offline)'}`}
+                      style={{ color: isActive ? info.color : isReady ? info.color : undefined }}
                     >
-                      <ProviderIcon provider={p.name} className="w-5 h-5" />
-                      {setting?.enabled && p.available && (
+                      <ProviderIcon provider={p.name} className={`w-5 h-5 ${isOffline ? 'text-white/30' : ''}`} />
+                      {/* Status indicator */}
+                      {isActive && (
                         <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#30d158] animate-heartbeat border-2 border-black" />
+                      )}
+                      {isReady && (
+                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-white/40 border border-black" />
+                      )}
+                      {isOffline && (
+                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#ff453a]/80 border border-black" />
                       )}
                     </button>
                   );
@@ -266,43 +279,27 @@ export default function Home() {
                           viewBox="0 0 80 80"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
+                          className="text-white"
                         >
                           {/* Outer ring */}
-                          <circle cx="40" cy="40" r="38" stroke="url(#welcomeGradient)" strokeWidth="1" opacity="0.3" />
+                          <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="1" opacity="0.15" />
+                          <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="1" opacity="0.1" />
                           {/* Connecting lines */}
                           <path
-                            d="M40 40L20 20M40 40L60 20M40 40L20 60M40 40L60 60M40 40L40 12M40 40L40 68M40 40L12 40M40 40L68 40"
-                            stroke="url(#welcomeGradient)"
+                            d="M40 40L18 18M40 40L62 18M40 40L18 62M40 40L62 62"
+                            stroke="currentColor"
                             strokeWidth="1.5"
                             strokeLinecap="round"
-                            opacity="0.6"
+                            opacity="0.4"
                           />
-                          {/* Outer nodes */}
-                          <circle cx="20" cy="20" r="5" fill="#0071e3" />
-                          <circle cx="60" cy="20" r="5" fill="#30d158" />
-                          <circle cx="20" cy="60" r="5" fill="#ff9f0a" />
-                          <circle cx="60" cy="60" r="5" fill="#bf5af2" />
-                          <circle cx="40" cy="12" r="4" fill="#0071e3" opacity="0.7" />
-                          <circle cx="40" cy="68" r="4" fill="#30d158" opacity="0.7" />
-                          <circle cx="12" cy="40" r="4" fill="#ff9f0a" opacity="0.7" />
-                          <circle cx="68" cy="40" r="4" fill="#bf5af2" opacity="0.7" />
+                          {/* Corner nodes */}
+                          <circle cx="18" cy="18" r="4" fill="currentColor" opacity="0.5" />
+                          <circle cx="62" cy="18" r="4" fill="currentColor" opacity="0.5" />
+                          <circle cx="18" cy="62" r="4" fill="currentColor" opacity="0.5" />
+                          <circle cx="62" cy="62" r="4" fill="currentColor" opacity="0.5" />
                           {/* Center hub */}
-                          <circle cx="40" cy="40" r="12" fill="url(#centerWelcomeGradient)" />
-                          <circle cx="40" cy="40" r="8" fill="#1d1d1f" />
-                          <circle cx="40" cy="40" r="5" fill="#f5f5f7" />
-                          {/* Gradients */}
-                          <defs>
-                            <linearGradient id="welcomeGradient" x1="12" y1="12" x2="68" y2="68" gradientUnits="userSpaceOnUse">
-                              <stop stopColor="#0071e3" />
-                              <stop offset="0.33" stopColor="#30d158" />
-                              <stop offset="0.66" stopColor="#bf5af2" />
-                              <stop offset="1" stopColor="#ff9f0a" />
-                            </linearGradient>
-                            <linearGradient id="centerWelcomeGradient" x1="28" y1="28" x2="52" y2="52" gradientUnits="userSpaceOnUse">
-                              <stop stopColor="#0071e3" />
-                              <stop offset="1" stopColor="#bf5af2" />
-                            </linearGradient>
-                          </defs>
+                          <circle cx="40" cy="40" r="10" fill="currentColor" opacity="0.9" />
+                          <circle cx="40" cy="40" r="5" fill="black" />
                         </svg>
                       </div>
                       <h3 className="text-xl font-semibold text-[#f5f5f7] mb-2 tracking-tight">
@@ -335,10 +332,11 @@ export default function Home() {
                 {chat.isLoading && (
                   <div className="py-6 border-b border-[rgba(255,255,255,0.06)]">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-[#0071e3] to-[#bf5af2]">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/10 backdrop-blur-xl border border-white/20">
                         <svg className="w-4 h-4 text-white animate-pulse" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 12L6 6M12 12L18 6M12 12L6 18M12 12L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                          <circle cx="12" cy="12" r="2" fill="currentColor" />
+                          <path d="M12 12L6 6M12 12L18 6M12 12L6 18M12 12L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+                          <circle cx="12" cy="12" r="3" fill="currentColor" />
+                          <circle cx="12" cy="12" r="1.5" fill="black" />
                         </svg>
                       </div>
                       <div className="flex-1">

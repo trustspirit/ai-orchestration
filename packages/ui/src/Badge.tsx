@@ -14,14 +14,14 @@ export const Badge = ({
   children,
   ...props
 }: BadgeProps) => {
-  const baseStyle = 'inline-flex items-center font-normal rounded-full';
+  const baseStyle = 'inline-flex items-center font-medium rounded-full backdrop-blur-xl';
 
   const variants = {
-    default: 'bg-[rgba(255,255,255,0.08)] text-[#f5f5f7]',
-    success: 'bg-[rgba(48,209,88,0.12)] text-[#30d158]',
-    warning: 'bg-[rgba(255,159,10,0.12)] text-[#ff9f0a]',
-    error: 'bg-[rgba(255,69,58,0.12)] text-[#ff453a]',
-    info: 'bg-[rgba(0,113,227,0.12)] text-[#0071e3]',
+    default: 'bg-white/10 text-white/80 border border-white/20',
+    success: 'bg-green-500/20 text-green-400 border border-green-500/30',
+    warning: 'bg-orange-500/20 text-orange-400 border border-orange-500/30',
+    error: 'bg-red-500/20 text-red-400 border border-red-500/30',
+    info: 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
   };
 
   const sizes = {

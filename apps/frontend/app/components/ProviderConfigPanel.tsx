@@ -83,18 +83,27 @@ export function ProviderConfigPanel({
                 <div className="flex flex-col min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-medium text-[#f5f5f7] text-sm">{info.displayName}</span>
-                    {providerInfo.available ? (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#30d158] animate-heartbeat flex-shrink-0" />
-                    ) : (
-                      <span className="text-[10px] text-[#ff9f0a] font-medium flex-shrink-0">
-                        N/A
+                    {/* Status indicator */}
+                    {!providerInfo.available ? (
+                      // Unavailable - red indicator
+                      <span className="text-[10px] text-[#ff453a] font-medium flex-shrink-0">
+                        Offline
                       </span>
+                    ) : setting.enabled ? (
+                      // Available + Enabled - green heartbeat
+                      <span className="w-2 h-2 rounded-full bg-[#30d158] animate-heartbeat flex-shrink-0" />
+                    ) : (
+                      // Available + Disabled - gray static dot
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/30 flex-shrink-0" />
                     )}
                   </div>
                   {providerInfo.available && setting.enabled && (
-                    <span className="text-[10px] text-[#6e6e73] truncate">
+                    <span className="text-[10px] text-[#30d158] truncate">
                       {modelInfo?.name || currentModel}
                     </span>
+                  )}
+                  {providerInfo.available && !setting.enabled && (
+                    <span className="text-[10px] text-white/40 truncate">Ready</span>
                   )}
                 </div>
               </div>
@@ -147,7 +156,9 @@ export function ProviderConfigPanel({
                   label="Custom Prompt"
                   placeholder={DEFAULT_PROVIDER_PROMPTS[providerInfo.name]}
                   value={setting.systemPrompt || ''}
-                  onChange={(e) => updateSetting(providerInfo.name, { systemPrompt: e.target.value })}
+                  onChange={(e) =>
+                    updateSetting(providerInfo.name, { systemPrompt: e.target.value })
+                  }
                   rows={2}
                 />
               </div>
