@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Card, Button, Spinner } from '@repo/ui';
+import { Card, Button, Spinner, OrchestratorIcon, StatusDot, Avatar } from '@repo/ui';
 import { Strings, AI_PROVIDER_INFO } from '@repo/shared';
 import {
   Header,
@@ -167,7 +167,8 @@ export default function Home() {
                   const isActive = setting?.enabled && p.available;
                   const isReady = !setting?.enabled && p.available;
                   const isOffline = !p.available;
-                  
+                  const status = isActive ? 'active' : isReady ? 'ready' : 'offline';
+
                   return (
                     <button
                       key={p.name}
@@ -176,23 +177,19 @@ export default function Home() {
                         isActive
                           ? 'bg-white/10 border-white/20'
                           : isReady
-                          ? 'bg-white/5 border-white/10 opacity-60'
-                          : 'bg-white/5 border-white/5 opacity-30'
+                            ? 'bg-white/5 border-white/10 opacity-60'
+                            : 'bg-white/5 border-white/5 opacity-30'
                       }`}
-                      title={`${info.displayName}${isActive ? ' (active)' : isReady ? ' (ready)' : ' (offline)'}`}
+                      title={`${info.displayName} (${status})`}
                       style={{ color: isActive ? info.color : isReady ? info.color : undefined }}
                     >
-                      <ProviderIcon provider={p.name} className={`w-5 h-5 ${isOffline ? 'text-white/30' : ''}`} />
-                      {/* Status indicator */}
-                      {isActive && (
-                        <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#30d158] animate-heartbeat border-2 border-black" />
-                      )}
-                      {isReady && (
-                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-white/40 border border-black" />
-                      )}
-                      {isOffline && (
-                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#ff453a]/80 border border-black" />
-                      )}
+                      <ProviderIcon
+                        provider={p.name}
+                        className={`w-5 h-5 ${isOffline ? 'text-white/30' : ''}`}
+                      />
+                      <span className="absolute -top-0.5 -right-0.5">
+                        <StatusDot status={status} size="lg" showBorder />
+                      </span>
                     </button>
                   );
                 })}
@@ -271,59 +268,36 @@ export default function Home() {
 
             {/* Chat Messages (Scrollable) */}
             {!settingsError && (
-              <div className={`flex-1 ${chat.messages.length > 0 ? 'overflow-y-auto pr-2' : 'flex items-center justify-center'}`}>
+              <div
+                className={`flex-1 ${chat.messages.length > 0 ? 'overflow-y-auto pr-2' : 'flex items-center justify-center'}`}
+              >
                 {chat.messages.length === 0 ? (
                   <div className="text-center max-w-lg">
-                      <div className="w-20 h-20 mx-auto mb-6">
-                        <svg
-                          viewBox="0 0 80 80"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="text-white"
-                        >
-                          {/* Outer ring */}
-                          <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="1" opacity="0.15" />
-                          <circle cx="40" cy="40" r="30" stroke="currentColor" strokeWidth="1" opacity="0.1" />
-                          {/* Connecting lines */}
-                          <path
-                            d="M40 40L18 18M40 40L62 18M40 40L18 62M40 40L62 62"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            opacity="0.4"
-                          />
-                          {/* Corner nodes */}
-                          <circle cx="18" cy="18" r="4" fill="currentColor" opacity="0.5" />
-                          <circle cx="62" cy="18" r="4" fill="currentColor" opacity="0.5" />
-                          <circle cx="18" cy="62" r="4" fill="currentColor" opacity="0.5" />
-                          <circle cx="62" cy="62" r="4" fill="currentColor" opacity="0.5" />
-                          {/* Center hub */}
-                          <circle cx="40" cy="40" r="10" fill="currentColor" opacity="0.9" />
-                          <circle cx="40" cy="40" r="5" fill="black" />
-                        </svg>
-                      </div>
-                      <h3 className="text-xl font-semibold text-[#f5f5f7] mb-2 tracking-tight">
-                        {Strings.app.name}
-                      </h3>
-                      <p className="text-[#86868b] text-sm mb-6 leading-relaxed">
-                        Configure your AI providers on the left panel. Each provider can have its
-                        own model and custom system prompt.
-                      </p>
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {providers
-                          .filter((p) => p.available)
-                          .map((p) => (
-                            <span
-                              key={p.name}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#1d1d1f] border border-[rgba(255,255,255,0.08)]"
-                              style={{ color: p.color }}
-                            >
-                              <ProviderIcon provider={p.name} className="w-3.5 h-3.5" />
-                              {p.displayName}
-                            </span>
-                          ))}
-                      </div>
+                    <div className="mx-auto mb-6">
+                      <OrchestratorIcon size="xl" />
                     </div>
+                    <h3 className="text-xl font-semibold text-[#f5f5f7] mb-2 tracking-tight">
+                      {Strings.app.name}
+                    </h3>
+                    <p className="text-[#86868b] text-sm mb-6 leading-relaxed">
+                      Configure your AI providers on the left panel. Each provider can have its own
+                      model and custom system prompt.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {providers
+                        .filter((p) => p.available)
+                        .map((p) => (
+                          <span
+                            key={p.name}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#1d1d1f] border border-[rgba(255,255,255,0.08)]"
+                            style={{ color: p.color }}
+                          >
+                            <ProviderIcon provider={p.name} className="w-3.5 h-3.5" />
+                            {p.displayName}
+                          </span>
+                        ))}
+                    </div>
+                  </div>
                 ) : (
                   chat.messages.map((message) => <ChatMessage key={message.id} message={message} />)
                 )}
@@ -332,13 +306,9 @@ export default function Home() {
                 {chat.isLoading && (
                   <div className="py-6 border-b border-[rgba(255,255,255,0.06)]">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/10 backdrop-blur-xl border border-white/20">
-                        <svg className="w-4 h-4 text-white animate-pulse" viewBox="0 0 24 24" fill="none">
-                          <path d="M12 12L6 6M12 12L18 6M12 12L6 18M12 12L18 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
-                          <circle cx="12" cy="12" r="3" fill="currentColor" />
-                          <circle cx="12" cy="12" r="1.5" fill="black" />
-                        </svg>
-                      </div>
+                      <Avatar variant="ai" size="md">
+                        <OrchestratorIcon size="sm" animated />
+                      </Avatar>
                       <div className="flex-1">
                         <span className="text-sm font-medium text-[#f5f5f7]">AI Orchestrator</span>
                       </div>
@@ -346,10 +316,22 @@ export default function Home() {
                     <div className="pl-11">
                       <div className="flex items-center gap-3">
                         <div className="flex gap-1">
-                          <span className="w-2 h-2 bg-[#0071e3] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                          <span className="w-2 h-2 bg-[#30d158] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                          <span className="w-2 h-2 bg-[#bf5af2] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                          <span className="w-2 h-2 bg-[#ff9f0a] rounded-full animate-bounce" style={{ animationDelay: '450ms' }} />
+                          <span
+                            className="w-2 h-2 bg-[#0071e3] rounded-full animate-bounce"
+                            style={{ animationDelay: '0ms' }}
+                          />
+                          <span
+                            className="w-2 h-2 bg-[#30d158] rounded-full animate-bounce"
+                            style={{ animationDelay: '150ms' }}
+                          />
+                          <span
+                            className="w-2 h-2 bg-[#bf5af2] rounded-full animate-bounce"
+                            style={{ animationDelay: '300ms' }}
+                          />
+                          <span
+                            className="w-2 h-2 bg-[#ff9f0a] rounded-full animate-bounce"
+                            style={{ animationDelay: '450ms' }}
+                          />
                         </div>
                         <span className="text-sm text-[#86868b]">AI models are thinking...</span>
                       </div>

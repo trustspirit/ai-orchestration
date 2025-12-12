@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Toggle, Select, Textarea } from '@repo/ui';
+import { Toggle, Select, Textarea, StatusDot } from '@repo/ui';
 import { AI_PROVIDER_INFO, DEFAULT_PROVIDER_PROMPTS } from '@repo/shared';
 import type { AiProviderName } from '@repo/shared';
 import type { ProviderInfo, ProviderSetting } from '../lib/api';
@@ -82,19 +82,16 @@ export function ProviderConfigPanel({
                 </div>
                 <div className="flex flex-col min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-medium text-[#f5f5f7] text-sm">{info.displayName}</span>
-                    {/* Status indicator */}
+                    <span className="font-medium text-white/90 text-sm">{info.displayName}</span>
                     {!providerInfo.available ? (
-                      // Unavailable - red indicator
                       <span className="text-[10px] text-[#ff453a] font-medium flex-shrink-0">
                         Offline
                       </span>
-                    ) : setting.enabled ? (
-                      // Available + Enabled - green heartbeat
-                      <span className="w-2 h-2 rounded-full bg-[#30d158] animate-heartbeat flex-shrink-0" />
                     ) : (
-                      // Available + Disabled - gray static dot
-                      <span className="w-1.5 h-1.5 rounded-full bg-white/30 flex-shrink-0" />
+                      <StatusDot
+                        status={setting.enabled ? 'active' : 'ready'}
+                        size={setting.enabled ? 'md' : 'sm'}
+                      />
                     )}
                   </div>
                   {providerInfo.available && setting.enabled && (
