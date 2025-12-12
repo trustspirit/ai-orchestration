@@ -6,39 +6,52 @@ services:
       context: .
       dockerfile: apps/backend/Dockerfile
     ports:
-      - "3001:3001"
+      - "6201:6201"
     volumes:
       - .:/app
       - /app/node_modules
       - /app/apps/backend/node_modules
+      - /app/packages/shared/node_modules
+      - /app/packages/ui/node_modules
     environment:
       - NODE_ENV=development
-      - PORT=3001
-      - FRONTEND_URL=http://localhost:3000
+      - PORT=6201
+      - FRONTEND_URL=http://localhost:6200
       # AI Provider API Keys (set these in .env file or pass via docker-compose)
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-5.1}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-pro}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-sonnet-4-20250514}
+      - CLAUDE_MODEL=${CLAUDE_MODEL:-claude-sonnet-4-5}
       - PERPLEXITY_API_KEY=${PERPLEXITY_API_KEY:-}
-      - PERPLEXITY_MODEL=${PERPLEXITY_MODEL:-llama-3.1-sonar-large-128k-online}
+      - PERPLEXITY_MODEL=${PERPLEXITY_MODEL:-sonar}
     command: pnpm --filter backend dev
+    networks:
+      - orchestration-network
 
   frontend:
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile
     ports:
-      - "3000:3000"
+      - "6200:6200"
     volumes:
       - .:/app
       - /app/node_modules
       - /app/apps/frontend/node_modules
+      - /app/packages/shared/node_modules
+      - /app/packages/ui/node_modules
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:3001/api
+      - PORT=6200
+      - NEXT_PUBLIC_API_URL=http://localhost:6201/api
     depends_on:
       - backend
     command: pnpm --filter frontend dev
+    networks:
+      - orchestration-network
+
+networks:
+  orchestration-network:
+    driver: bridge

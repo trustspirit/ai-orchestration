@@ -22,6 +22,6 @@ WORKDIR /app/apps/frontend
 # Build
 RUN pnpm build
 
-EXPOSE 3000
+EXPOSE 6200
 
 CMD ["pnpm", "start"]

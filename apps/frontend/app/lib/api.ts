@@ -1,6 +1,6 @@
 import type { AiProviderName, OrchestrationResponse, ProviderConfig } from '@repo/shared';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6201/api';
 
 export interface ProviderInfo {
   name: AiProviderName;

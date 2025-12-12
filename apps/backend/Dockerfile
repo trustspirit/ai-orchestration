@@ -28,6 +28,6 @@ WORKDIR /app/apps/backend
 # Build
 RUN pnpm build
 
-EXPOSE 3001
+EXPOSE 6201
 
 CMD ["node", "dist/main"]
