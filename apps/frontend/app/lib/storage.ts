@@ -42,7 +42,7 @@ export function clearSettings(): void {
 
 export function createDefaultSettings(
   availableProviders: AiProviderName[],
-  providerDefaults: Record<AiProviderName, string>,
+  providerDefaults: Partial<Record<AiProviderName, string>>,
 ): ProviderSetting[] {
   const allProviders: AiProviderName[] = ['openai', 'gemini', 'claude', 'perplexity'];
 
