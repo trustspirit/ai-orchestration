@@ -80,7 +80,7 @@ export const Select = ({
         </button>
 
         {isOpen && (
-          <div className="absolute z-50 w-full mt-2 py-2 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute z-[100] w-full mt-2 py-2 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 max-h-[300px] overflow-y-auto">
             {options.map((option) => (
               <button
                 key={option.value}

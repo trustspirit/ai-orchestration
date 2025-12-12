@@ -1,10 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { Card, Button, Input, Toggle, Textarea, Badge } from '@repo/ui';
-import { Strings, AI_PROVIDER_INFO } from '@repo/shared';
+import { Card, Button, Input, Toggle, Textarea, Badge, Select, Spinner } from '@repo/ui';
+import {
+  Strings,
+  AI_PROVIDER_INFO,
+  AVAILABLE_MODELS,
+  DEFAULT_PROVIDER_PROMPTS,
+} from '@repo/shared';
 import type { AiProviderName, RoleConfig } from '@repo/shared';
 import { Header } from '../components';
+import { useSettings } from '../hooks/useSettings';
 
 const defaultRoles: RoleConfig[] = [
   { id: 'default', name: 'Default Assistant', prompt: Strings.roles.default, isDefault: true },
@@ -16,47 +21,44 @@ const defaultRoles: RoleConfig[] = [
 ];
 
 export default function SettingsPage() {
-  const [activeProviders, setActiveProviders] = useState<Record<AiProviderName, boolean>>({
-    openai: true,
-    gemini: true,
-    claude: true,
-    perplexity: true,
-  });
+  const {
+    providers,
+    providerSettings,
+    globalRole,
+    isLoading,
+    error,
+    updateProviderSetting,
+    updateGlobalRole,
+    resetToDefaults,
+  } = useSettings();
 
-  const [roles, setRoles] = useState<RoleConfig[]>(defaultRoles);
-  const [newRoleName, setNewRoleName] = useState('');
-  const [newRolePrompt, setNewRolePrompt] = useState('');
-  const [editingRole, setEditingRole] = useState<string | null>(null);
+  const allProviders: AiProviderName[] = ['openai', 'gemini', 'claude', 'perplexity'];
 
-  const providers: AiProviderName[] = ['openai', 'gemini', 'claude', 'perplexity'];
-
-  const toggleProvider = (provider: AiProviderName) => {
-    setActiveProviders((prev) => ({
-      ...prev,
-      [provider]: !prev[provider],
-    }));
+  const getSetting = (provider: AiProviderName) => {
+    return (
+      providerSettings.find((s) => s.provider === provider) || {
+        provider,
+        enabled: false,
+        model: undefined,
+        systemPrompt: undefined,
+      }
+    );
   };
 
-  const addRole = () => {
-    if (newRoleName.trim() && newRolePrompt.trim()) {
-      const newRole: RoleConfig = {
-        id: Date.now().toString(),
-        name: newRoleName.trim(),
-        prompt: newRolePrompt.trim(),
-      };
-      setRoles((prev) => [...prev, newRole]);
-      setNewRoleName('');
-      setNewRolePrompt('');
-    }
+  const getProviderInfo = (provider: AiProviderName) => {
+    return providers.find((p) => p.name === provider);
   };
 
-  const deleteRole = (id: string) => {
-    setRoles((prev) => prev.filter((role) => role.id !== id && !role.isDefault));
-  };
-
-  const updateRole = (id: string, updates: Partial<RoleConfig>) => {
-    setRoles((prev) => prev.map((role) => (role.id === id ? { ...role, ...updates } : role)));
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Spinner size="lg" />
+          <p className="text-gray-400">Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
@@ -69,10 +71,56 @@ export default function SettingsPage() {
       <Header />
 
       <main className="relative pt-28 pb-8 px-6 max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">{Strings.settings.title}</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">{Strings.settings.title}</h1>
+          <Button variant="secondary" onClick={resetToDefaults}>
+            Reset to Defaults
+          </Button>
+        </div>
+
+        {error && (
+          <Card variant="default" padding="md" className="mb-6 border-amber-500/30 bg-amber-500/10">
+            <p className="text-amber-400">Warning: {error}</p>
+          </Card>
+        )}
+
+        {/* Global Role Selection */}
+        <Card variant="elevated" padding="lg" className="mb-6 overflow-visible relative z-20">
+          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+            <svg
+              className="w-5 h-5 text-green-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+            Default AI Role
+          </h2>
+
+          <Select
+            label="Select the default role for all AI providers"
+            options={defaultRoles.map((role) => ({
+              value: role.id,
+              label: role.name,
+              description: role.prompt.slice(0, 60) + '...',
+            }))}
+            value={globalRole}
+            onChange={updateGlobalRole}
+          />
+
+          <p className="text-sm text-gray-400 mt-4">
+            This role applies to all providers unless overridden with a custom prompt.
+          </p>
+        </Card>
 
         {/* AI Providers Section */}
-        <Card variant="elevated" padding="lg" className="mb-6">
+        <Card variant="elevated" padding="lg" className="mb-6 overflow-visible relative z-10">
           <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
             <svg
               className="w-5 h-5 text-blue-400"
@@ -90,51 +138,107 @@ export default function SettingsPage() {
             {Strings.nav.providers}
           </h2>
 
-          <div className="grid gap-4">
-            {providers.map((provider) => {
+          <div className="space-y-4">
+            {allProviders.map((provider) => {
               const info = AI_PROVIDER_INFO[provider];
+              const setting = getSetting(provider);
+              const providerInfo = getProviderInfo(provider);
+              const isAvailable = providerInfo?.available ?? false;
+              const models = AVAILABLE_MODELS[provider] || [];
+
               return (
                 <div
                   key={provider}
-                  className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10"
+                  className={`p-4 rounded-xl bg-white/5 border border-white/10 ${
+                    !isAvailable ? 'opacity-60' : ''
+                  }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: `${info.color}20` }}
-                    >
+                  {/* Provider Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-4">
                       <div
-                        className="w-4 h-4 rounded-full"
-                        style={{ backgroundColor: info.color }}
-                      />
+                        className="w-12 h-12 rounded-xl flex items-center justify-center"
+                        style={{ backgroundColor: `${info.color}20` }}
+                      >
+                        <div
+                          className="w-5 h-5 rounded-full"
+                          style={{ backgroundColor: info.color }}
+                        />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-lg">{info.displayName}</h3>
+                          {isAvailable ? (
+                            <Badge variant="success" size="sm">
+                              Available
+                            </Badge>
+                          ) : (
+                            <Badge variant="warning" size="sm">
+                              API Key Missing
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-400">{info.description}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-medium">{info.displayName}</h3>
-                      <p className="text-sm text-gray-400">{info.description}</p>
-                    </div>
+                    <Toggle
+                      checked={setting.enabled}
+                      onChange={(checked) => updateProviderSetting(provider, { enabled: checked })}
+                      disabled={!isAvailable}
+                      size="lg"
+                    />
                   </div>
-                  <Toggle
-                    checked={activeProviders[provider]}
-                    onChange={() => toggleProvider(provider)}
-                  />
+
+                  {/* Provider Settings */}
+                  {setting.enabled && isAvailable && (
+                    <div className="mt-4 pt-4 border-t border-white/10 space-y-4">
+                      {/* Model Selection */}
+                      <Select
+                        label="Model"
+                        options={models.map((m) => ({
+                          value: m.id,
+                          label: m.name,
+                          description: m.description,
+                        }))}
+                        value={setting.model || providerInfo?.defaultModel || models[0]?.id || ''}
+                        onChange={(value) => updateProviderSetting(provider, { model: value })}
+                      />
+
+                      {/* Custom System Prompt */}
+                      <Textarea
+                        label="Custom System Prompt (Optional)"
+                        placeholder={DEFAULT_PROVIDER_PROMPTS[provider]}
+                        value={setting.systemPrompt || ''}
+                        onChange={(e) =>
+                          updateProviderSetting(provider, { systemPrompt: e.target.value })
+                        }
+                        rows={3}
+                      />
+
+                      <p className="text-xs text-gray-500">
+                        Leave empty to use the global role. Custom prompts override the global
+                        setting for this provider only.
+                      </p>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
-          <div className="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-            <p className="text-sm text-amber-400">
-              <strong>Note:</strong> API keys should be configured on the server via environment
-              variables. Contact your administrator to set up provider credentials.
+          <div className="mt-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+            <p className="text-sm text-blue-400">
+              <strong>Tip:</strong> API keys are configured on the server. Contact your
+              administrator to add or update provider credentials.
             </p>
           </div>
         </Card>
 
-        {/* Custom Roles Section */}
-        <Card variant="elevated" padding="lg" className="mb-6">
-          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+        {/* Settings Info */}
+        <Card variant="default" padding="md">
+          <div className="flex items-start gap-3">
             <svg
-              className="w-5 h-5 text-purple-400"
+              className="w-5 h-5 text-gray-400 mt-0.5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -143,131 +247,19 @@ export default function SettingsPage() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            {Strings.settings.customRoles}
-          </h2>
-
-          {/* Role List */}
-          <div className="space-y-3 mb-6">
-            {roles.map((role) => (
-              <div key={role.id} className="p-4 rounded-xl bg-white/5 border border-white/10">
-                {editingRole === role.id ? (
-                  <div className="space-y-3">
-                    <Input
-                      value={role.name}
-                      onChange={(e) => updateRole(role.id, { name: e.target.value })}
-                      placeholder={Strings.settings.roleName}
-                    />
-                    <Textarea
-                      value={role.prompt}
-                      onChange={(e) => updateRole(role.id, { prompt: e.target.value })}
-                      placeholder={Strings.settings.rolePrompt}
-                      rows={3}
-                    />
-                    <div className="flex gap-2">
-                      <Button variant="primary" onClick={() => setEditingRole(null)}>
-                        {Strings.actions.save}
-                      </Button>
-                      <Button variant="secondary" onClick={() => setEditingRole(null)}>
-                        {Strings.actions.cancel}
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h4 className="font-medium">{role.name}</h4>
-                        {role.isDefault && (
-                          <Badge variant="info" size="sm">
-                            Default
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-400 line-clamp-2">{role.prompt}</p>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <button
-                        onClick={() => setEditingRole(role.id)}
-                        className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                          />
-                        </svg>
-                      </button>
-                      {!role.isDefault && (
-                        <button
-                          onClick={() => deleteRole(role.id)}
-                          className="p-2 rounded-lg hover:bg-red-500/20 transition-colors"
-                        >
-                          <svg
-                            className="w-4 h-4 text-red-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Add New Role */}
-          <div className="p-4 rounded-xl bg-white/5 border border-dashed border-white/20">
-            <h4 className="font-medium mb-4">{Strings.settings.addRole}</h4>
-            <div className="space-y-3">
-              <Input
-                value={newRoleName}
-                onChange={(e) => setNewRoleName(e.target.value)}
-                placeholder={Strings.settings.roleName}
-                label={Strings.settings.roleName}
-              />
-              <Textarea
-                value={newRolePrompt}
-                onChange={(e) => setNewRolePrompt(e.target.value)}
-                placeholder="e.g., You are a friendly customer support agent..."
-                label={Strings.settings.rolePrompt}
-                rows={3}
-              />
-              <Button
-                variant="primary"
-                onClick={addRole}
-                disabled={!newRoleName.trim() || !newRolePrompt.trim()}
-              >
-                {Strings.settings.addRole}
-              </Button>
+            <div>
+              <p className="text-sm text-gray-300">
+                Settings are automatically saved to your browser&apos;s local storage.
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Your preferences will persist across sessions on this device.
+              </p>
             </div>
           </div>
         </Card>
-
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button variant="primary" className="px-8">
-            {Strings.settings.saveSettings}
-          </Button>
-        </div>
       </main>
     </div>
   );

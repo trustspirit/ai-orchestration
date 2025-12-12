@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { Card, Button } from '@repo/ui';
-import { Strings, DEFAULT_PROVIDER_PROMPTS } from '@repo/shared';
-import type { AiProviderName } from '@repo/shared';
+import { useEffect, useRef } from 'react';
+import { Card, Button, Spinner } from '@repo/ui';
+import { Strings } from '@repo/shared';
 import {
   Header,
   ProviderConfigPanel,
@@ -14,41 +13,40 @@ import {
   getRolePrompt,
 } from './components';
 import { useChat } from './hooks/useChat';
-import { fetchProviders, ProviderInfo, ProviderSetting } from './lib/api';
+import { useSettings } from './hooks/useSettings';
 
 export default function Home() {
-  const [providers, setProviders] = useState<ProviderInfo[]>([]);
-  const [providerSettings, setProviderSettings] = useState<ProviderSetting[]>([]);
-  const [selectedRole, setSelectedRole] = useState('default');
-  const [showConfig, setShowConfig] = useState(true);
+  const {
+    providers,
+    providerSettings,
+    globalRole,
+    isLoading: settingsLoading,
+    error: settingsError,
+    updateProviderSetting,
+    updateGlobalRole,
+  } = useSettings();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const globalSystemRole = getRolePrompt(selectedRole);
+  const globalSystemRole = getRolePrompt(globalRole);
   const chat = useChat(providerSettings, globalSystemRole);
-
-  useEffect(() => {
-    fetchProviders()
-      .then((fetchedProviders) => {
-        setProviders(fetchedProviders);
-        // 초기 설정: 사용 가능한 모든 프로바이더 활성화
-        const initialSettings: ProviderSetting[] = fetchedProviders.map((p) => ({
-          provider: p.name,
-          enabled: p.available,
-          model: p.defaultModel,
-          systemPrompt: undefined,
-        }));
-        setProviderSettings(initialSettings);
-      })
-      .catch((err) => {
-        console.error('Failed to fetch providers:', err);
-      });
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chat.messages]);
 
   const enabledCount = providerSettings.filter((s) => s.enabled).length;
+
+  if (settingsLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Spinner size="lg" />
+          <p className="text-gray-400">Loading AI providers...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white">
@@ -62,56 +60,63 @@ export default function Home() {
       <Header />
 
       <main className="relative pt-28 pb-8 px-6 max-w-6xl mx-auto">
+        {settingsError && (
+          <Card variant="default" padding="md" className="mb-6 border-amber-500/30 bg-amber-500/10">
+            <p className="text-amber-400">Warning: Could not connect to backend. {settingsError}</p>
+          </Card>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Panel - Configuration */}
-          <div className={`lg:col-span-1 ${showConfig ? '' : 'hidden lg:block'}`}>
+          <div className="lg:col-span-1">
             <Card variant="elevated" padding="lg" className="sticky top-28">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold">Configuration</h2>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowConfig(!showConfig)}
-                  className="lg:hidden text-sm px-3 py-1"
+                <a
+                  href="/settings"
+                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
                 >
-                  {showConfig ? 'Hide' : 'Show'}
-                </Button>
+                  Advanced →
+                </a>
               </div>
 
               {/* Global Role Selector */}
               <div className="mb-6">
-                <RoleSelector selectedRole={selectedRole} onRoleChange={setSelectedRole} />
+                <RoleSelector selectedRole={globalRole} onRoleChange={updateGlobalRole} />
               </div>
 
               {/* Provider Configuration */}
               <ProviderConfigPanel
                 providers={providers}
                 settings={providerSettings}
-                onSettingsChange={setProviderSettings}
+                onSettingsChange={(newSettings) => {
+                  newSettings.forEach((setting) => {
+                    const existing = providerSettings.find((s) => s.provider === setting.provider);
+                    if (
+                      !existing ||
+                      existing.enabled !== setting.enabled ||
+                      existing.model !== setting.model ||
+                      existing.systemPrompt !== setting.systemPrompt
+                    ) {
+                      updateProviderSetting(setting.provider, setting);
+                    }
+                  });
+                }}
               />
 
               <div className="mt-4 pt-4 border-t border-white/10">
                 <p className="text-sm text-gray-400">
                   {enabledCount} provider{enabledCount !== 1 ? 's' : ''} enabled
                 </p>
+                <p className="text-xs text-gray-500 mt-1">Settings auto-saved to browser</p>
               </div>
             </Card>
           </div>
 
           {/* Right Panel - Chat */}
           <div className="lg:col-span-2">
-            {/* Mobile Config Toggle */}
-            <div className="lg:hidden mb-4">
-              <Button
-                variant="secondary"
-                onClick={() => setShowConfig(!showConfig)}
-                className="w-full"
-              >
-                {showConfig ? 'Show Chat' : `Configure AI (${enabledCount} active)`}
-              </Button>
-            </div>
-
             {/* Chat Messages */}
-            <div className={`space-y-4 mb-6 min-h-[400px] ${showConfig ? 'hidden lg:block' : ''}`}>
+            <div className="space-y-4 mb-6 min-h-[400px]">
               {chat.messages.length === 0 ? (
                 <Card variant="default" padding="lg" className="text-center">
                   <div className="py-12">
@@ -164,12 +169,12 @@ export default function Home() {
             </div>
 
             {/* Response Details */}
-            {chat.lastConsensus && chat.lastResponses && !showConfig && (
+            {chat.lastConsensus && chat.lastResponses && (
               <ResponseDetails consensus={chat.lastConsensus} responses={chat.lastResponses} />
             )}
 
             {/* Chat Input */}
-            <div className={`sticky bottom-4 mt-6 ${showConfig ? 'hidden lg:block' : ''}`}>
+            <div className="sticky bottom-4 mt-6">
               <ChatInput
                 onSend={chat.sendMessage}
                 isLoading={chat.isLoading}
