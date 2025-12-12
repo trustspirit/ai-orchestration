@@ -75,8 +75,8 @@ export default function Home() {
         </div>
 
         {/* Center Panel - Chat (Centered) */}
-        <div className="flex-1 flex justify-center px-6">
-          <div className="w-full max-w-4xl">
+        <div className="flex-1 flex justify-center px-6 min-h-0">
+          <div className="w-full max-w-4xl h-full">
             {settingsError ? (
               <ServerOfflineBanner onRetry={() => window.location.reload()} />
             ) : (

@@ -7,12 +7,14 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   label?: string;
   autoResize?: boolean;
   maxHeight?: number;
+  size?: 'sm' | 'md';
 }
 
 export const Textarea = ({
   label,
   autoResize = false,
   maxHeight = 300,
+  size = 'md',
   className,
   ...props
 }: TextareaProps) => {
@@ -27,15 +29,30 @@ export const Textarea = ({
     }
   }, [props.value, autoResize, maxHeight]);
 
+  const sizeStyles = {
+    sm: {
+      label: 'text-[11px]',
+      textarea: 'px-3 py-2 text-xs',
+      gap: 'gap-1',
+    },
+    md: {
+      label: 'text-sm',
+      textarea: 'px-4 py-3 text-sm',
+      gap: 'gap-2',
+    },
+  };
+
+  const styles = sizeStyles[size];
+
   return (
-    <div className="flex flex-col gap-2">
-      {label && <label className="text-sm font-normal text-white/60 ml-1">{label}</label>}
+    <div className={`flex flex-col ${styles.gap}`}>
+      {label && <label className={`${styles.label} font-normal text-white/50`}>{label}</label>}
       <textarea
         ref={textareaRef}
         className={`
-          px-4 py-3 rounded-xl
-          bg-white/10 backdrop-blur-xl border border-white/20
-          text-white placeholder-white/40
+          ${styles.textarea} rounded-lg
+          bg-white/10 backdrop-blur-xl border border-white/15
+          text-white placeholder-white/30
           focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30
           transition-all duration-200
           resize-none

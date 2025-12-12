@@ -16,6 +16,7 @@ export interface ProviderSetting {
   provider: AiProviderName;
   model?: string;
   systemPrompt?: string;
+  role?: string; // Individual role override (e.g., 'default', 'analyst', etc.)
   enabled: boolean;
 }
 

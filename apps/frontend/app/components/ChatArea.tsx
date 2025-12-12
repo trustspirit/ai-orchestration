@@ -32,10 +32,10 @@ export function ChatArea({
   }, [messages]);
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 py-6">
+    <div className="h-full flex flex-col min-w-0 py-6">
       {/* Chat Messages (Scrollable) */}
       <div
-        className={`flex-1 ${messages.length > 0 ? 'overflow-y-auto pr-2' : 'flex items-center justify-center'}`}
+        className={`flex-1 min-h-0 ${messages.length > 0 ? 'overflow-y-auto pr-2' : 'flex items-center justify-center'}`}
       >
         {messages.length === 0 ? (
           <WelcomeScreen providers={providers} />
@@ -71,4 +71,3 @@ export function ChatArea({
     </div>
   );
 }
-

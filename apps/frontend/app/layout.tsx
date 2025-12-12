@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     'Multi-AI Orchestration Service - Get consensus responses from OpenAI, Gemini, Claude, and Perplexity',
   keywords: ['AI', 'ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'AI Orchestration'],
   authors: [{ name: 'AI Orchestrator' }],
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-icon.svg',
+  },
 };
 
 export default function RootLayout({
