@@ -16,7 +16,14 @@ export class PerplexityProvider implements AiProvider {
   }
 
   isAvailable(): boolean {
-    return !!this.apiKey;
+    // API key must be a non-empty string and not a placeholder
+    return (
+      !!this.apiKey &&
+      this.apiKey.length > 10 &&
+      !this.apiKey.startsWith('your_') &&
+      this.apiKey !== 'your_perplexity_api_key' &&
+      this.apiKey !== 'your_perplexity_api_key_here'
+    );
   }
 
   getDefaultModel(): string {

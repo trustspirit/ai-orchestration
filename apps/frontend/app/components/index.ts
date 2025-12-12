@@ -5,3 +5,4 @@ export * from './ChatMessage';
 export * from './ChatInput';
 export * from './ResponseDetails';
 export * from './RoleSelector';
+export * from './MarkdownRenderer';

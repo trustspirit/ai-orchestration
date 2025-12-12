@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/shared": "workspace:*",
+    "@repo/ui": "workspace:*",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "@repo/ui": "workspace:*",
-    "@repo/shared": "workspace:*",
-    "@repo/eslint-config": "workspace:*"
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",

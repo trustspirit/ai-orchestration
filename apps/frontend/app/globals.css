@@ -81,6 +81,29 @@ body {
   50% { opacity: 0.5; }
 }
 
+/* Heartbeat / Online indicator animation */
+@keyframes heartbeat {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 4px 2px rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(34, 197, 94, 0.6);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
 }
@@ -91,6 +114,14 @@ body {
 
 .animate-pulse-slow {
   animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
 }
 
 /* Glass morphism */

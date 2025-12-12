@@ -42,9 +42,30 @@ export class OrchestrationService {
 
     const messages: AiMessage[] = [...conversationHistory, { role: 'user', content: prompt }];
 
-    // 활성화된 프로바이더만 필터링하고 설정 적용
-    const providerConfigs: ProviderRequestConfig[] = providerSettings
-      .filter((s) => s.enabled)
+    // Get list of actually available providers (with valid API keys)
+    const availableProviders = this.aiService.getAvailableProviders();
+
+    // 활성화된 프로바이더 중 실제로 사용 가능한 것만 필터링
+    const enabledProviders = providerSettings.filter((s) => s.enabled);
+
+    if (enabledProviders.length === 0) {
+      throw new Error('No providers enabled. Please enable at least one AI provider in settings.');
+    }
+
+    // Check which enabled providers are actually available
+    const unavailableProviders = enabledProviders
+      .filter((s) => !availableProviders.includes(s.provider))
+      .map((s) => s.provider);
+
+    if (unavailableProviders.length > 0) {
+      this.logger.warn(
+        `The following enabled providers are not available (missing API keys): ${unavailableProviders.join(', ')}`,
+      );
+    }
+
+    // Only use providers that are both enabled AND available
+    const providerConfigs: ProviderRequestConfig[] = enabledProviders
+      .filter((s) => availableProviders.includes(s.provider))
       .map((s) => ({
         provider: s.provider,
         model: s.model,
@@ -52,7 +73,11 @@ export class OrchestrationService {
       }));
 
     if (providerConfigs.length === 0) {
-      throw new Error('No providers enabled');
+      const missingKeys = enabledProviders.map((s) => s.provider).join(', ');
+      throw new Error(
+        `No available providers. The enabled providers (${missingKeys}) are missing API keys. ` +
+          `Please configure API keys in the backend .env file.`,
+      );
     }
 
     // Get responses from all selected providers with individual settings

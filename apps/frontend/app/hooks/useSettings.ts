@@ -2,14 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { AiProviderName } from '@repo/shared';
+import { AI_PROVIDER_INFO, AVAILABLE_MODELS } from '@repo/shared';
 import type { ProviderInfo, ProviderSetting } from '../lib/api';
 import { fetchProviders } from '../lib/api';
-import {
-  saveSettings,
-  loadSettings,
-  createDefaultSettings,
-  StoredSettings,
-} from '../lib/storage';
+import { saveSettings, loadSettings, createDefaultSettings } from '../lib/storage';
 
 export interface SettingsState {
   providers: ProviderInfo[];
@@ -17,6 +13,20 @@ export interface SettingsState {
   globalRole: string;
   isLoading: boolean;
   error: string | null;
+}
+
+// Create default providers when backend is unavailable (all marked as unavailable)
+function createDefaultProviders(): ProviderInfo[] {
+  const allProviders: AiProviderName[] = ['openai', 'gemini', 'claude', 'perplexity'];
+  return allProviders.map((name) => ({
+    name,
+    available: false, // All unavailable when backend is not connected
+    displayName: AI_PROVIDER_INFO[name].displayName,
+    description: AI_PROVIDER_INFO[name].description,
+    color: AI_PROVIDER_INFO[name].color,
+    defaultModel: AVAILABLE_MODELS[name]?.[0]?.id || '',
+    models: AVAILABLE_MODELS[name] || [],
+  }));
 }
 
 export function useSettings() {
@@ -65,11 +75,19 @@ export function useSettings() {
           error: null,
         });
       } catch (err) {
-        setState((prev) => ({
-          ...prev,
+        // Backend unavailable - create default providers all marked as unavailable
+        const defaultProviders = createDefaultProviders();
+        const stored = loadSettings();
+
+        setState({
+          providers: defaultProviders,
+          providerSettings:
+            stored?.providerSettings.map((s) => ({ ...s, enabled: false })) ||
+            createDefaultSettings([], {}),
+          globalRole: stored?.globalRole || 'default',
           isLoading: false,
-          error: err instanceof Error ? err.message : 'Failed to load settings',
-        }));
+          error: err instanceof Error ? err.message : 'Failed to connect to backend',
+        });
       }
     };
 
@@ -80,6 +98,13 @@ export function useSettings() {
   const updateProviderSetting = useCallback(
     (provider: AiProviderName, updates: Partial<ProviderSetting>) => {
       setState((prev) => {
+        // Check if provider is available before allowing enable
+        const providerInfo = prev.providers.find((p) => p.name === provider);
+        if (updates.enabled && providerInfo && !providerInfo.available) {
+          // Don't allow enabling unavailable providers
+          return prev;
+        }
+
         const newSettings = prev.providerSettings.map((s) =>
           s.provider === provider ? { ...s, ...updates } : s,
         );
@@ -156,10 +181,7 @@ export function useSettings() {
 }
 
 // Merge stored settings with current provider info
-function mergeSettings(
-  stored: ProviderSetting[],
-  providers: ProviderInfo[],
-): ProviderSetting[] {
+function mergeSettings(stored: ProviderSetting[], providers: ProviderInfo[]): ProviderSetting[] {
   const allProviders: AiProviderName[] = ['openai', 'gemini', 'claude', 'perplexity'];
 
   return allProviders.map((provider) => {
@@ -184,4 +206,3 @@ function mergeSettings(
     };
   });
 }
-

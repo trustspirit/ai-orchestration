@@ -16,7 +16,15 @@ export class ClaudeProvider implements AiProvider {
   }
 
   isAvailable(): boolean {
-    return !!this.apiKey;
+    // API key must be a non-empty string and not a placeholder
+    return (
+      !!this.apiKey &&
+      this.apiKey.length > 10 &&
+      !this.apiKey.startsWith('your_') &&
+      !this.apiKey.startsWith('sk-ant-your') &&
+      this.apiKey !== 'your_anthropic_api_key' &&
+      this.apiKey !== 'your_anthropic_api_key_here'
+    );
   }
 
   getDefaultModel(): string {

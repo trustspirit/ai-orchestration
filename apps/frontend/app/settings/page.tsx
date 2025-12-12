@@ -169,9 +169,7 @@ export default function SettingsPage() {
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold text-lg">{info.displayName}</h3>
                           {isAvailable ? (
-                            <Badge variant="success" size="sm">
-                              Available
-                            </Badge>
+                            <span className="w-2 h-2 rounded-full bg-green-500 animate-heartbeat" />
                           ) : (
                             <Badge variant="warning" size="sm">
                               API Key Missing

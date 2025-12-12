@@ -2,6 +2,7 @@
 
 import { Card, Badge } from '@repo/ui';
 import type { ChatMessage as ChatMessageType } from '@repo/shared';
+import { MarkdownRenderer } from './MarkdownRenderer';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -12,7 +13,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
-      <div className={`max-w-[80%] ${isUser ? 'order-2' : 'order-1'}`}>
+      <div className={`max-w-[85%] ${isUser ? 'order-2' : 'order-1'}`}>
         <Card
           variant={isUser ? 'default' : 'elevated'}
           padding="md"
@@ -66,9 +67,13 @@ export function ChatMessage({ message }: ChatMessageProps) {
                   {new Date(message.timestamp).toLocaleTimeString()}
                 </span>
               </div>
-              <div className="text-gray-200 whitespace-pre-wrap leading-relaxed">
-                {message.content}
-              </div>
+              {isUser ? (
+                <div className="text-gray-200 whitespace-pre-wrap leading-relaxed">
+                  {message.content}
+                </div>
+              ) : (
+                <MarkdownRenderer content={message.content} />
+              )}
             </div>
           </div>
         </Card>
