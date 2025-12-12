@@ -6,3 +6,4 @@ export * from './ChatInput';
 export * from './ResponseDetails';
 export * from './RoleSelector';
 export * from './MarkdownRenderer';
+export * from './ProviderIcons';

@@ -8,7 +8,7 @@ import {
   DEFAULT_PROVIDER_PROMPTS,
 } from '@repo/shared';
 import type { AiProviderName, RoleConfig } from '@repo/shared';
-import { Header } from '../components';
+import { Header, ProviderIcon } from '../components';
 import { useSettings } from '../hooks/useSettings';
 
 const defaultRoles: RoleConfig[] = [
@@ -158,12 +158,9 @@ export default function SettingsPage() {
                     <div className="flex items-center gap-4">
                       <div
                         className="w-12 h-12 rounded-xl flex items-center justify-center"
-                        style={{ backgroundColor: `${info.color}20` }}
+                        style={{ backgroundColor: `${info.color}20`, color: info.color }}
                       >
-                        <div
-                          className="w-5 h-5 rounded-full"
-                          style={{ backgroundColor: info.color }}
-                        />
+                        <ProviderIcon provider={provider} className="w-6 h-6" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">

@@ -12,7 +12,7 @@ export class PerplexityProvider implements AiProvider {
 
   constructor() {
     this.apiKey = process.env.PERPLEXITY_API_KEY || '';
-    this.defaultModel = process.env.PERPLEXITY_MODEL || 'llama-3.1-sonar-large-128k-online';
+    this.defaultModel = process.env.PERPLEXITY_MODEL || 'sonar';
   }
 
   isAvailable(): boolean {

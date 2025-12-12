@@ -5,6 +5,7 @@ import { Card, Toggle, Select, Textarea } from '@repo/ui';
 import { AI_PROVIDER_INFO, DEFAULT_PROVIDER_PROMPTS } from '@repo/shared';
 import type { AiProviderName } from '@repo/shared';
 import type { ProviderInfo, ProviderSetting } from '../lib/api';
+import { ProviderIcon } from './ProviderIcons';
 
 interface ProviderConfigPanelProps {
   providers: ProviderInfo[];
@@ -55,6 +56,8 @@ export function ProviderConfigPanel({
         const setting = getSetting(providerInfo.name);
         const info = AI_PROVIDER_INFO[providerInfo.name];
         const isExpanded = expandedProvider === providerInfo.name;
+        const currentModel = setting.model || providerInfo.defaultModel;
+        const modelInfo = providerInfo.models.find((m) => m.id === currentModel);
 
         return (
           <Card
@@ -67,27 +70,36 @@ export function ProviderConfigPanel({
           >
             {/* Header - Compact Layout */}
             <div
-              className="flex items-center justify-between px-3 py-2.5 cursor-pointer hover:bg-white/5 transition-colors gap-2"
+              className="flex items-center justify-between px-3 py-2 cursor-pointer hover:bg-white/5 transition-colors gap-2"
               onClick={() => setExpandedProvider(isExpanded ? null : providerInfo.name)}
             >
-              {/* Left: Icon + Name + Status */}
-              <div className="flex items-center gap-2 flex-1 min-w-0">
+              {/* Left: Icon + Name + Model */}
+              <div className="flex items-center gap-2.5 flex-1 min-w-0">
                 <div
                   className="w-7 h-7 rounded-md flex-shrink-0 flex items-center justify-center"
-                  style={{ backgroundColor: `${info.color}20` }}
+                  style={{ backgroundColor: `${info.color}20`, color: info.color }}
                 >
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: info.color }} />
+                  <ProviderIcon provider={providerInfo.name} className="w-4 h-4" />
                 </div>
-                <span className="font-medium text-white text-sm truncate">
-                  {info.displayName}
-                </span>
-                {providerInfo.available ? (
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-heartbeat flex-shrink-0" />
-                ) : (
-                  <span className="text-[10px] text-yellow-500/80 font-medium flex-shrink-0">
-                    N/A
-                  </span>
-                )}
+                <div className="flex flex-col min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium text-white text-sm">
+                      {info.displayName}
+                    </span>
+                    {providerInfo.available ? (
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-heartbeat flex-shrink-0" />
+                    ) : (
+                      <span className="text-[10px] text-yellow-500/80 font-medium flex-shrink-0">
+                        N/A
+                      </span>
+                    )}
+                  </div>
+                  {providerInfo.available && setting.enabled && (
+                    <span className="text-[10px] text-gray-500 truncate">
+                      {modelInfo?.name || currentModel}
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Right: Toggle + Arrow */}

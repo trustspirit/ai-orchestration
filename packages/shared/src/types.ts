@@ -75,10 +75,21 @@ export const AVAILABLE_MODELS: Record<
   { id: string; name: string; description: string }[]
 > = {
   openai: [
-    { id: 'gpt-4o', name: 'GPT-4o', description: 'Most capable, multimodal' },
-    { id: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Fast and affordable' },
-    { id: 'gpt-4-turbo', name: 'GPT-4 Turbo', description: 'High intelligence with vision' },
-    { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', description: 'Fast and cost-effective' },
+    // GPT-5 계열
+    { id: 'gpt-5.1', name: 'GPT-5.1', description: 'Latest: coding & agent optimized' },
+    { id: 'gpt-5', name: 'GPT-5', description: 'Previous generation GPT-5' },
+    { id: 'gpt-5-pro', name: 'GPT-5 Pro', description: 'Enhanced GPT-5 version' },
+    { id: 'gpt-5-mini', name: 'GPT-5 Mini', description: 'Fast and cost-effective' },
+    // GPT-4.1 계열
+    { id: 'gpt-4.1', name: 'GPT-4.1', description: 'Tool calling & instruction following' },
+    { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini', description: 'Compact GPT-4.1' },
+    { id: 'gpt-4.1-nano', name: 'GPT-4.1 Nano', description: 'Fastest, most affordable' },
+    // o-시리즈 (추론)
+    { id: 'o4-mini', name: 'o4 Mini', description: 'Fast and affordable reasoning' },
+    { id: 'o3', name: 'o3', description: 'Advanced reasoning model' },
+    { id: 'o3-pro', name: 'o3 Pro', description: 'Enhanced o3 with more compute' },
+    { id: 'o3-mini', name: 'o3 Mini', description: 'Compact reasoning model' },
+    { id: 'o1', name: 'o1', description: 'Original o-series model' },
   ],
   gemini: [
     { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', description: 'Best for complex tasks' },
@@ -101,19 +112,24 @@ export const AVAILABLE_MODELS: Record<
   ],
   perplexity: [
     {
-      id: 'llama-3.1-sonar-large-128k-online',
-      name: 'Sonar Large',
-      description: 'Real-time web search',
+      id: 'sonar',
+      name: 'Sonar',
+      description: 'Fast and efficient, real-time web search',
     },
     {
-      id: 'llama-3.1-sonar-small-128k-online',
-      name: 'Sonar Small',
-      description: 'Fast web search',
+      id: 'sonar-pro',
+      name: 'Sonar Pro',
+      description: 'Advanced model with better reasoning',
     },
     {
-      id: 'llama-3.1-sonar-huge-128k-online',
-      name: 'Sonar Huge',
-      description: 'Most comprehensive',
+      id: 'sonar-reasoning',
+      name: 'Sonar Reasoning',
+      description: 'Optimized for complex reasoning tasks',
+    },
+    {
+      id: 'sonar-reasoning-pro',
+      name: 'Sonar Reasoning Pro',
+      description: 'Most powerful reasoning model',
     },
   ],
 };

@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, Button, Spinner } from '@repo/ui';
-import { Strings } from '@repo/shared';
+import { Strings, AI_PROVIDER_INFO } from '@repo/shared';
 import {
   Header,
   ProviderConfigPanel,
@@ -11,6 +11,7 @@ import {
   ResponseDetails,
   RoleSelector,
   getRolePrompt,
+  ProviderIcon,
 } from './components';
 import { useChat } from './hooks/useChat';
 import { useSettings } from './hooks/useSettings';
@@ -36,6 +37,7 @@ export default function Home() {
   }, [chat.messages]);
 
   const enabledCount = providerSettings.filter((s) => s.enabled).length;
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   if (settingsLoading) {
     return (
@@ -49,7 +51,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
+    <div className="h-screen bg-[#0a0a0f] text-white flex flex-col overflow-hidden">
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px]" />
@@ -59,70 +61,180 @@ export default function Home() {
 
       <Header />
 
-      <main className="relative pt-28 pb-8 px-6 max-w-6xl mx-auto">
-        {settingsError && (
-          <Card variant="default" padding="md" className="mb-6 border-amber-500/30 bg-amber-500/10">
-            <p className="text-amber-400">Warning: Could not connect to backend. {settingsError}</p>
-          </Card>
-        )}
+      <main className="relative flex-1 flex overflow-hidden pt-20">
+        <div className="flex w-full max-w-[1600px] mx-auto px-4 gap-4">
+          {/* Left Panel - Configuration (Collapsible) */}
+          <div
+            className={`flex-shrink-0 py-4 overflow-y-auto hidden lg:block transition-all duration-300 ${
+              sidebarOpen ? 'w-80' : 'w-14'
+            }`}
+          >
+            {sidebarOpen ? (
+              /* Expanded View */
+              <>
+                {settingsError && (
+                  <Card
+                    variant="default"
+                    padding="sm"
+                    className="mb-4 border-amber-500/30 bg-amber-500/10"
+                  >
+                    <p className="text-amber-400 text-xs">Backend not connected</p>
+                  </Card>
+                )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Panel - Configuration */}
-          <div className="lg:col-span-1">
-            <Card variant="elevated" padding="lg" className="sticky top-28">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Configuration</h2>
+                <Card variant="elevated" padding="md">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setSidebarOpen(false)}
+                        className="p-1 -ml-1 rounded hover:bg-white/10 transition-colors"
+                        title="Collapse sidebar"
+                      >
+                        <svg
+                          className="w-4 h-4 text-gray-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
+                          />
+                        </svg>
+                      </button>
+                      <h2 className="text-sm font-semibold">Configuration</h2>
+                    </div>
+                    <a
+                      href="/settings"
+                      className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      Advanced →
+                    </a>
+                  </div>
+
+                  {/* Global Role Selector */}
+                  <div className="mb-4">
+                    <RoleSelector selectedRole={globalRole} onRoleChange={updateGlobalRole} />
+                  </div>
+
+                  {/* Provider Configuration */}
+                  <ProviderConfigPanel
+                    providers={providers}
+                    settings={providerSettings}
+                    onSettingsChange={(newSettings) => {
+                      newSettings.forEach((setting) => {
+                        const existing = providerSettings.find(
+                          (s) => s.provider === setting.provider,
+                        );
+                        if (
+                          !existing ||
+                          existing.enabled !== setting.enabled ||
+                          existing.model !== setting.model ||
+                          existing.systemPrompt !== setting.systemPrompt
+                        ) {
+                          updateProviderSetting(setting.provider, setting);
+                        }
+                      });
+                    }}
+                  />
+
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <p className="text-xs text-gray-400">
+                      {enabledCount} provider{enabledCount !== 1 ? 's' : ''} enabled
+                    </p>
+                  </div>
+                </Card>
+              </>
+            ) : (
+              /* Collapsed View - Icons Only */
+              <div className="space-y-2">
+                {/* Expand Button */}
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                  title="Expand sidebar"
+                >
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+
+                <div className="h-px bg-white/10 mx-1" />
+
+                {providers.map((p) => {
+                  const setting = providerSettings.find((s) => s.provider === p.name);
+                  const info = AI_PROVIDER_INFO[p.name];
+                  return (
+                    <button
+                      key={p.name}
+                      onClick={() => setSidebarOpen(true)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all relative ${
+                        setting?.enabled ? 'bg-white/10' : 'bg-white/5 opacity-50'
+                      }`}
+                      title={`${info.displayName}${setting?.enabled ? ' (enabled)' : ''}`}
+                      style={{ color: info.color }}
+                    >
+                      <ProviderIcon provider={p.name} className="w-5 h-5" />
+                      {setting?.enabled && p.available && (
+                        <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 animate-heartbeat border border-[#0a0a0f]" />
+                      )}
+                    </button>
+                  );
+                })}
+
+                <div className="h-px bg-white/10 mx-1" />
+
                 <a
                   href="/settings"
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                  className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+                  title="Advanced Settings"
                 >
-                  Advanced →
+                  <svg
+                    className="w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
                 </a>
               </div>
-
-              {/* Global Role Selector */}
-              <div className="mb-6">
-                <RoleSelector selectedRole={globalRole} onRoleChange={updateGlobalRole} />
-              </div>
-
-              {/* Provider Configuration */}
-              <ProviderConfigPanel
-                providers={providers}
-                settings={providerSettings}
-                onSettingsChange={(newSettings) => {
-                  newSettings.forEach((setting) => {
-                    const existing = providerSettings.find((s) => s.provider === setting.provider);
-                    if (
-                      !existing ||
-                      existing.enabled !== setting.enabled ||
-                      existing.model !== setting.model ||
-                      existing.systemPrompt !== setting.systemPrompt
-                    ) {
-                      updateProviderSetting(setting.provider, setting);
-                    }
-                  });
-                }}
-              />
-
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <p className="text-sm text-gray-400">
-                  {enabledCount} provider{enabledCount !== 1 ? 's' : ''} enabled
-                </p>
-                <p className="text-xs text-gray-500 mt-1">Settings auto-saved to browser</p>
-              </div>
-            </Card>
+            )}
           </div>
 
-          {/* Right Panel - Chat */}
-          <div className="lg:col-span-2">
-            {/* Chat Messages */}
-            <div className="space-y-4 mb-6 min-h-[400px]">
+          {/* Right Panel - Chat (Flexible Width) */}
+          <div className="flex-1 flex flex-col min-w-0 py-4">
+            {/* Chat Messages (Scrollable) */}
+            <div className="flex-1 overflow-y-auto pr-2 space-y-4">
               {chat.messages.length === 0 ? (
                 <Card variant="default" padding="lg" className="text-center">
-                  <div className="py-12">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <div className="py-8">
+                    <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                       <svg
-                        className="w-8 h-8 text-white"
+                        className="w-7 h-7 text-white"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -135,8 +247,8 @@ export default function Home() {
                         />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">{Strings.app.name}</h3>
-                    <p className="text-gray-400 max-w-md mx-auto mb-4">
+                    <h3 className="text-lg font-semibold mb-2">{Strings.app.name}</h3>
+                    <p className="text-gray-400 text-sm max-w-lg mx-auto mb-4">
                       Configure your AI providers on the left panel. Each provider can have its own
                       model and custom system prompt.
                     </p>
@@ -165,23 +277,23 @@ export default function Home() {
                 </Card>
               )}
 
+              {/* Response Details */}
+              {chat.lastConsensus && chat.lastResponses && (
+                <ResponseDetails consensus={chat.lastConsensus} responses={chat.lastResponses} />
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Response Details */}
-            {chat.lastConsensus && chat.lastResponses && (
-              <ResponseDetails consensus={chat.lastConsensus} responses={chat.lastResponses} />
-            )}
-
-            {/* Chat Input */}
-            <div className="sticky bottom-4 mt-6">
+            {/* Chat Input (Fixed at Bottom) */}
+            <div className="flex-shrink-0 pt-4">
               <ChatInput
                 onSend={chat.sendMessage}
                 isLoading={chat.isLoading}
                 disabled={enabledCount === 0}
               />
               {enabledCount === 0 && (
-                <p className="text-center text-amber-400 text-sm mt-2">
+                <p className="text-center text-amber-400 text-xs mt-2">
                   Please enable at least one AI provider to start chatting
                 </p>
               )}
