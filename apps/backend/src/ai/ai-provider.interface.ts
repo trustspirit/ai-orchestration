@@ -30,6 +30,13 @@ export interface AiCompletionResponse {
     totalTokens: number;
   };
   latencyMs: number;
+  citations?: CitationInfo[]; // Citations from Perplexity or other sources
+}
+
+export interface CitationInfo {
+  index: number;
+  url: string;
+  title?: string;
 }
 
 export interface AiProvider {

@@ -60,6 +60,19 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
               <h4 className="text-sm font-medium text-[#f5f5f7]">{Strings.chat.consensus}</h4>
               {getAgreementBadge(consensus.agreementLevel)}
             </div>
+
+            {/* Summary */}
+            {consensus.summary && (
+              <div className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.08)]">
+                <p className="text-xs font-normal text-[#86868b] uppercase tracking-wide mb-2">
+                  Summary
+                </p>
+                <div className="text-sm text-[#f5f5f7]">
+                  <MarkdownRenderer content={consensus.summary} />
+                </div>
+              </div>
+            )}
+
             {consensus.keyPoints.length > 0 && (
               <div className="space-y-2">
                 <p className="text-xs font-normal text-[#86868b] uppercase tracking-wide">
@@ -104,9 +117,7 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
               >
                 <div
                   className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[rgba(255,255,255,0.04)] transition-colors"
-                  onClick={() =>
-                    setExpandedResponse(isResponseExpanded ? null : response.provider)
-                  }
+                  onClick={() => setExpandedResponse(isResponseExpanded ? null : response.provider)}
                 >
                   <div className="flex items-center gap-2.5">
                     <ProviderIcon
@@ -139,7 +150,10 @@ export function ResponseDetails({ consensus, responses }: ResponseDetailsProps) 
 
                 {isResponseExpanded && (
                   <div className="px-4 pb-4 border-t border-[rgba(255,255,255,0.08)] pt-3">
-                    <MarkdownRenderer content={response.content} />
+                    <MarkdownRenderer
+                      content={response.content}
+                      externalCitations={response.citations}
+                    />
                     {response.usage && (
                       <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.05)] flex gap-4 text-xs text-[#6e6e73]">
                         <span>Prompt: {response.usage.promptTokens}</span>

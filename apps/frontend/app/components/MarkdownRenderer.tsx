@@ -1,15 +1,60 @@
 'use client';
 
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CodeBlock } from './CodeBlock';
+import { extractCitations, processCitationsInText, CitationLink } from './CitationLink';
+import type { Citation } from './CitationLink';
+
+interface ExternalCitation {
+  index: number;
+  url: string;
+  title?: string;
+}
 
 interface MarkdownRendererProps {
   content: string;
   className?: string;
+  externalCitations?: ExternalCitation[]; // Citations from API (e.g., Perplexity)
 }
 
-export function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, className, externalCitations }: MarkdownRendererProps) {
+  // Extract and process citations
+  const { processedContent, citations } = useMemo(() => {
+    const extracted = extractCitations(content);
+
+    // Merge with external citations (from API like Perplexity)
+    if (externalCitations && externalCitations.length > 0) {
+      externalCitations.forEach((extCitation) => {
+        const citationNum = extCitation.index;
+        const existing = extracted.citations.find((c) => c.number === citationNum);
+        if (existing) {
+          // Update existing citation with API data
+          if (!existing.url) existing.url = extCitation.url;
+          if (!existing.title && extCitation.title) existing.title = extCitation.title;
+        } else {
+          // Add new citation from API
+          extracted.citations.push({
+            number: citationNum,
+            url: extCitation.url,
+            title: extCitation.title,
+          });
+        }
+      });
+      // Sort by number
+      extracted.citations.sort((a, b) => a.number - b.number);
+    }
+
+    return extracted;
+  }, [content, externalCitations]);
+
+  // Helper to process text nodes for citations
+  const processTextWithCitations = (text: string) => {
+    if (citations.length === 0) return text;
+    return processCitationsInText(text, citations);
+  };
+
   return (
     <div className={`prose prose-invert prose-sm max-w-none ${className || ''}`}>
       <ReactMarkdown
@@ -18,23 +63,25 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
           // Headings
           h1: ({ children }) => (
             <h1 className="text-xl font-semibold text-[#f5f5f7] mt-4 mb-2 first:mt-0 tracking-tight">
-              {children}
+              {processChildren(children, processTextWithCitations)}
             </h1>
           ),
           h2: ({ children }) => (
             <h2 className="text-lg font-medium text-[#f5f5f7] mt-3 mb-2 first:mt-0 tracking-tight">
-              {children}
+              {processChildren(children, processTextWithCitations)}
             </h2>
           ),
           h3: ({ children }) => (
             <h3 className="text-base font-medium text-[#f5f5f7] mt-2 mb-1 first:mt-0">
-              {children}
+              {processChildren(children, processTextWithCitations)}
             </h3>
           ),
 
-          // Paragraph
+          // Paragraph - process citations in text
           p: ({ children }) => (
-            <p className="text-[#f5f5f7] mb-3 last:mb-0 leading-relaxed text-[15px]">{children}</p>
+            <p className="text-[#f5f5f7] mb-3 last:mb-0 leading-relaxed text-[15px]">
+              {processChildren(children, processTextWithCitations)}
+            </p>
           ),
 
           // Lists
@@ -44,7 +91,11 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
           ol: ({ children }) => (
             <ol className="list-decimal list-inside mb-3 space-y-1">{children}</ol>
           ),
-          li: ({ children }) => <li className="text-[#f5f5f7] text-[15px]">{children}</li>,
+          li: ({ children }) => (
+            <li className="text-[#f5f5f7] text-[15px]">
+              {processChildren(children, processTextWithCitations)}
+            </li>
+          ),
 
           // Code - inline and block
           code: ({ className, children }) => {
@@ -67,7 +118,7 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
           // Blockquote
           blockquote: ({ children }) => (
             <blockquote className="border-l-4 border-[#0071e3] pl-4 py-1 my-3 bg-[rgba(0,113,227,0.08)] rounded-r-xl text-[#86868b]">
-              {children}
+              {processChildren(children, processTextWithCitations)}
             </blockquote>
           ),
 
@@ -102,25 +153,93 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
             <tr className="divide-x divide-[rgba(255,255,255,0.08)]">{children}</tr>
           ),
           th: ({ children }) => (
-            <th className="px-3 py-2 text-left text-sm font-medium text-[#f5f5f7]">{children}</th>
+            <th className="px-3 py-2 text-left text-sm font-medium text-[#f5f5f7]">
+              {processChildren(children, processTextWithCitations)}
+            </th>
           ),
-          td: ({ children }) => <td className="px-3 py-2 text-sm text-[#86868b]">{children}</td>,
+          td: ({ children }) => (
+            <td className="px-3 py-2 text-sm text-[#86868b]">
+              {processChildren(children, processTextWithCitations)}
+            </td>
+          ),
 
           // Horizontal rule
           hr: () => <hr className="my-4 border-[rgba(255,255,255,0.08)]" />,
 
           // Strong and emphasis
           strong: ({ children }) => (
-            <strong className="font-medium text-[#f5f5f7]">{children}</strong>
+            <strong className="font-medium text-[#f5f5f7]">
+              {processChildren(children, processTextWithCitations)}
+            </strong>
           ),
-          em: ({ children }) => <em className="italic text-[#86868b]">{children}</em>,
+          em: ({ children }) => (
+            <em className="italic text-[#86868b]">
+              {processChildren(children, processTextWithCitations)}
+            </em>
+          ),
 
           // Strikethrough
           del: ({ children }) => <del className="text-[#6e6e73] line-through">{children}</del>,
         }}
       >
-        {content}
+        {processedContent}
       </ReactMarkdown>
+
+      {/* Citation sources footer */}
+      {citations.length > 0 && <CitationFooter citations={citations} />}
+    </div>
+  );
+}
+
+// Process children to handle citations in text nodes
+function processChildren(
+  children: React.ReactNode,
+  processor: (text: string) => React.ReactNode,
+): React.ReactNode {
+  return React.Children.map(children, (child) => {
+    if (typeof child === 'string') {
+      return processor(child);
+    }
+    return child;
+  });
+}
+
+// Citation footer component
+function CitationFooter({ citations }: { citations: Citation[] }) {
+  const validCitations = citations.filter((c) => c.url);
+
+  if (validCitations.length === 0) return null;
+
+  return (
+    <div className="mt-4 pt-3 border-t border-white/10">
+      <p className="text-xs font-medium text-white/50 mb-2">Sources</p>
+      <div className="flex flex-wrap gap-2">
+        {validCitations.map((citation) => {
+          const hostname = new URL(citation.url).hostname.replace('www.', '');
+          return (
+            <a
+              key={citation.number}
+              href={citation.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-colors group"
+            >
+              <span className="text-[10px] font-medium text-[#5ac8fa]">[{citation.number}]</span>
+              <img
+                src={`https://www.google.com/s2/favicons?domain=${hostname}&sz=16`}
+                alt=""
+                className="w-3 h-3"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              <span className="text-xs text-white/60 group-hover:text-white/80 truncate max-w-[120px]">
+                {hostname}
+              </span>
+            </a>
+          );
+        })}
+      </div>
     </div>
   );
 }

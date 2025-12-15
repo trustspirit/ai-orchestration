@@ -36,10 +36,6 @@ export class OrchestrationController {
 
   @Post('chat')
   async chat(@Body() dto: CreateOrchestrationDto) {
-    this.logger.log(
-      `Received chat request with ${dto.providerSettings?.length || 0} provider settings`,
-    );
-
     const result = await this.orchestrationService.orchestrate({
       prompt: dto.prompt,
       providerSettings: dto.providerSettings,

@@ -56,6 +56,15 @@ export interface OrchestrationResponse {
 }
 
 /**
+ * Citation information from AI providers (e.g., Perplexity)
+ */
+export interface CitationInfo {
+  index: number;
+  url: string;
+  title?: string;
+}
+
+/**
  * Response from a single AI provider
  */
 export interface ProviderResponse {
@@ -64,6 +73,7 @@ export interface ProviderResponse {
   model: string;
   latencyMs: number;
   usage?: TokenUsage;
+  citations?: CitationInfo[]; // Citations from Perplexity or other sources
 }
 
 /**
